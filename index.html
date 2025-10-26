@@ -5,29 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DMN Solutions Kenya | Professional IT Services</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         /* Base Styles */
         :root {
-            --primary: #0066cc;
+            --primary: #0066ff;
             --primary-light: #4d94ff;
-            --secondary: #003366;
-            --accent: #00aaff;
-            --accent-alt: #ff6b6b;
-            --success: #28a745;
-            --warning: #ffc107;
-            --info: #17a2b8;
+            --secondary: #003399;
+            --accent: #00ccff;
+            --accent-alt: #ff3366;
+            --success: #00cc88;
+            --warning: #ffaa00;
+            --info: #00aaff;
             --light: #f8f9fa;
             --dark: #212529;
-            --purple: #6f42c1;
-            --orange: #fd7e14;
-            --teal: #20c997;
+            --purple: #9933ff;
+            --orange: #ff6600;
+            --teal: #00ccaa;
+            --pink: #ff3399;
+            --yellow: #ffcc00;
+            --bg-color: #ffffff;
+            --text-color: #212529;
+            --card-bg: #ffffff;
+            --header-bg: rgba(255, 255, 255, 0.95);
+            --footer-bg: #003399;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --primary: #4d94ff;
+            --primary-light: #66a3ff;
+            --secondary: #6699ff;
+            --accent: #66d9ff;
+            --accent-alt: #ff6680;
+            --success: #66ffc2;
+            --warning: #ffd966;
+            --info: #66ccff;
+            --light: #1a1a1a;
+            --dark: #f8f9fa;
+            --purple: #b366ff;
+            --orange: #ff9933;
+            --teal: #66ffeb;
+            --pink: #ff66cc;
+            --yellow: #ffff66;
+            --bg-color: #121212;
+            --text-color: #f8f9fa;
+            --card-bg: #1e1e1e;
+            --header-bg: rgba(30, 30, 30, 0.95);
+            --footer-bg: #001a4d;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
         
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', sans-serif;
         }
         
         html {
@@ -36,8 +69,10 @@
         
         body {
             line-height: 1.6;
-            color: var(--dark);
-            background-color: #fff;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            overflow-x: hidden;
+            transition: background-color 0.3s, color 0.3s;
         }
         
         .container {
@@ -69,14 +104,15 @@
             position: absolute;
             width: 70px;
             height: 3px;
-            background: var(--primary);
+            background: linear-gradient(to right, var(--primary), var(--accent));
             bottom: -10px;
             left: 50%;
             transform: translateX(-50%);
         }
         
         .section-title p {
-            color: #666;
+            color: var(--text-color);
+            opacity: 0.8;
             max-width: 700px;
             margin: 0 auto;
         }
@@ -87,22 +123,24 @@
             background: var(--primary);
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 30px;
             cursor: pointer;
             font-size: 1rem;
             font-weight: 600;
             text-decoration: none;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 102, 255, 0.3);
         }
         
         .btn:hover {
             background: var(--secondary);
             transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
         
         .btn-whatsapp {
             background: #25D366;
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
         }
         
         .btn-whatsapp:hover {
@@ -111,28 +149,32 @@
         
         .btn-accent {
             background: var(--accent-alt);
+            box-shadow: 0 4px 15px rgba(255, 51, 102, 0.3);
         }
         
         .btn-accent:hover {
-            background: #ff5252;
+            background: #ff1a52;
         }
         
         .btn-purple {
             background: var(--purple);
+            box-shadow: 0 4px 15px rgba(153, 51, 255, 0.3);
         }
         
         .btn-purple:hover {
-            background: #5a2d9c;
+            background: #8a2be2;
         }
         
         /* Header Styles */
         header {
-            background-color: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background-color: var(--header-bg);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
+            transition: all 0.3s ease;
         }
         
         .header-container {
@@ -149,7 +191,9 @@
         
         .logo h1 {
             font-size: 1.8rem;
-            color: var(--primary);
+            background: linear-gradient(to right, var(--primary), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         
         .logo span {
@@ -162,49 +206,280 @@
         }
         
         .nav-menu li {
-            margin-left: 30px;
+            margin-left: 25px;
         }
         
         .nav-menu a {
             text-decoration: none;
-            color: var(--dark);
+            color: var(--text-color);
             font-weight: 500;
             transition: color 0.3s;
+            position: relative;
+            font-size: 0.95rem;
+        }
+        
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background: linear-gradient(to right, var(--primary), var(--accent));
+            transition: width 0.3s;
+        }
+        
+        .nav-menu a:hover::after {
+            width: 100%;
         }
         
         .nav-menu a:hover {
             color: var(--primary);
         }
         
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
         .mobile-toggle {
             display: none;
             font-size: 1.5rem;
             cursor: pointer;
+            color: var(--primary);
+        }
+        
+        /* Theme Toggle */
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .theme-toggle:hover {
+            transform: rotate(30deg);
+        }
+        
+        /* Notification Bell */
+        .notification-container {
+            position: relative;
+        }
+        
+        .notification-bell {
+            position: relative;
+            cursor: pointer;
+            font-size: 1.3rem;
+            color: var(--primary);
+        }
+        
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--accent-alt);
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .notification-dropdown {
+            position: absolute;
+            top: 40px;
+            right: 0;
+            width: 320px;
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            padding: 15px;
+            display: none;
+            z-index: 1000;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .notification-dropdown.active {
+            display: block;
+        }
+        
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .notification-header h3 {
+            font-size: 1.1rem;
+            color: var(--text-color);
+        }
+        
+        .mark-all-read {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+        
+        .notification-item {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            position: relative;
+            cursor: pointer;
+        }
+        
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+        
+        .notification-item.unread::before {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 8px;
+            height: 8px;
+            background: var(--accent-alt);
+            border-radius: 50%;
+        }
+        
+        .notification-item h4 {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+            color: var(--text-color);
+        }
+        
+        .notification-item p {
+            font-size: 0.8rem;
+            color: var(--text-color);
+            opacity: 0.7;
+            margin-bottom: 5px;
+        }
+        
+        .notification-time {
+            font-size: 0.7rem;
+            color: var(--text-color);
+            opacity: 0.5;
+        }
+        
+        .no-notifications {
+            text-align: center;
+            padding: 20px 0;
+            color: var(--text-color);
+            opacity: 0.7;
+        }
+        
+        /* Search Bar */
+        .search-container {
+            position: relative;
+        }
+        
+        .search-input {
+            padding: 8px 15px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 30px;
+            width: 200px;
+            transition: all 0.3s;
+            outline: none;
+            background: var(--card-bg);
+            color: var(--text-color);
+        }
+        
+        .search-input:focus {
+            width: 250px;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0, 102, 255, 0.2);
+        }
+        
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--card-bg);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            margin-top: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1000;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .search-result-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: background 0.2s;
+            color: var(--text-color);
+        }
+        
+        .search-result-item:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        
+        .search-result-item:last-child {
+            border-bottom: none;
         }
         
         /* Hero Section */
         .hero {
-            background: linear-gradient(rgba(0, 51, 102, 0.85), rgba(0, 102, 204, 0.85)), url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
+            background: linear-gradient(rgba(0, 51, 153, 0.85), rgba(0, 102, 255, 0.85)), url('https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80');
             background-size: cover;
             background-position: center;
             color: white;
             text-align: center;
             padding: 180px 0 100px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" preserveAspectRatio="none"><path fill="rgba(255,255,255,0.05)" d="M0,0 L1000,0 L1000,1000 L0,1000 Z"><animate attributeName="d" dur="20s" repeatCount="indefinite" values="M0,0 L1000,0 L1000,1000 L0,1000 Z; M0,0 L1000,0 L1000,800 L0,1000 Z; M0,0 L1000,0 L1000,600 L0,1000 Z; M0,0 L1000,0 L1000,1000 L0,1000 Z"/></path></svg>');
+            animation: wave 10s infinite linear;
+        }
+        
+        @keyframes wave {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0); }
         }
         
         .hero-content {
             max-width: 800px;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
         
         .hero h1 {
             font-size: 3.5rem;
             margin-bottom: 20px;
+            animation: fadeInUp 1s ease;
         }
         
         .hero p {
             font-size: 1.2rem;
             margin-bottom: 30px;
+            animation: fadeInUp 1s ease 0.2s both;
         }
         
         .hero-buttons {
@@ -212,6 +487,7 @@
             gap: 15px;
             justify-content: center;
             flex-wrap: wrap;
+            animation: fadeInUp 1s ease 0.4s both;
         }
         
         /* Services Section */
@@ -226,12 +502,34 @@
         }
         
         .service-card {
-            background: white;
-            border-radius: 10px;
+            background: var(--card-bg);
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s, box-shadow 0.3s;
             border-top: 4px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .service-card:hover::before {
+            opacity: 1;
+        }
+        
+        .service-card:nth-child(1) {
+            border-top-color: var(--primary);
         }
         
         .service-card:nth-child(2) {
@@ -251,11 +549,12 @@
         }
         
         .service-card:nth-child(6) {
-            border-top-color: var(--info);
+            border-top-color: var(--pink);
         }
         
         .service-card:hover {
             transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
         }
         
         .service-icon {
@@ -266,27 +565,27 @@
         }
         
         .service-card:nth-child(1) .service-icon {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
         }
         
         .service-card:nth-child(2) .service-icon {
-            background: var(--accent-alt);
+            background: linear-gradient(135deg, var(--accent-alt), #ff6699);
         }
         
         .service-card:nth-child(3) .service-icon {
-            background: var(--purple);
+            background: linear-gradient(135deg, var(--purple), #b366ff);
         }
         
         .service-card:nth-child(4) .service-icon {
-            background: var(--orange);
+            background: linear-gradient(135deg, var(--orange), #ff9933);
         }
         
         .service-card:nth-child(5) .service-icon {
-            background: var(--teal);
+            background: linear-gradient(135deg, var(--teal), #33cc99);
         }
         
         .service-card:nth-child(6) .service-icon {
-            background: var(--info);
+            background: linear-gradient(135deg, var(--pink), #ff66cc);
         }
         
         .service-content {
@@ -296,6 +595,132 @@
         .service-content h3 {
             margin-bottom: 15px;
             color: var(--secondary);
+        }
+        
+        .service-content p {
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+        
+        /* Portfolio Section */
+        .portfolio {
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--purple) 100%);
+            color: white;
+        }
+        
+        .portfolio .section-title h2 {
+            color: white;
+        }
+        
+        .portfolio .section-title h2::after {
+            background: white;
+        }
+        
+        .portfolio .section-title p {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .portfolio-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .portfolio-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .portfolio-image {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .portfolio-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .portfolio-card:hover .portfolio-image img {
+            transform: scale(1.1);
+        }
+        
+        .portfolio-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .portfolio-card:hover .portfolio-overlay {
+            opacity: 1;
+        }
+        
+        .portfolio-content {
+            padding: 20px;
+        }
+        
+        .portfolio-content h3 {
+            margin-bottom: 10px;
+            color: white;
+        }
+        
+        .portfolio-content p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 15px;
+        }
+        
+        .portfolio-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .portfolio-tag {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        
+        .portfolio-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .portfolio-actions .btn {
+            flex: 1;
+            text-align: center;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+        }
+        
+        .copy-btn {
+            background: var(--teal);
+            box-shadow: 0 4px 15px rgba(0, 204, 170, 0.3);
+        }
+        
+        .copy-btn:hover {
+            background: #00b394;
         }
         
         /* About Section */
@@ -314,12 +739,14 @@
         
         .about-text p {
             margin-bottom: 20px;
+            color: var(--text-color);
+            opacity: 0.8;
         }
         
         .about-image img {
             width: 100%;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
         }
         
         /* Why Choose Us Section */
@@ -336,32 +763,41 @@
         .feature {
             text-align: center;
             padding: 30px 20px;
-            background: white;
-            border-radius: 10px;
+            background: var(--card-bg);
+            border-radius: 15px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
         
         .feature:hover {
             transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
         }
         
         .feature i {
             font-size: 2.5rem;
-            color: var(--primary);
             margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         
         .feature:nth-child(2) i {
-            color: var(--accent-alt);
+            background: linear-gradient(135deg, var(--accent-alt), var(--pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         
         .feature:nth-child(3) i {
-            color: var(--purple);
+            background: linear-gradient(135deg, var(--orange), var(--yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         
         .feature:nth-child(4) i {
-            color: var(--orange);
+            background: linear-gradient(135deg, var(--teal), var(--success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         
         .feature h3 {
@@ -369,205 +805,9 @@
             color: var(--secondary);
         }
         
-        /* Projects Section */
-        .projects {
-            background: linear-gradient(135deg, var(--primary-light) 0%, var(--purple) 100%);
-            color: white;
-        }
-        
-        .projects .section-title h2 {
-            color: white;
-        }
-        
-        .projects .section-title h2::after {
-            background: white;
-        }
-        
-        .projects .section-title p {
-            color: rgba(255, 255, 255, 0.8);
-        }
-        
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-        }
-        
-        .project-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 10px;
-            overflow: hidden;
-            transition: transform 0.3s;
-        }
-        
-        .project-card:hover {
-            transform: translateY(-10px);
-        }
-        
-        .project-image {
-            height: 200px;
-            overflow: hidden;
-        }
-        
-        .project-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s;
-        }
-        
-        .project-card:hover .project-image img {
-            transform: scale(1.1);
-        }
-        
-        .project-content {
-            padding: 20px;
-        }
-        
-        .project-content h3 {
-            margin-bottom: 10px;
-            color: white;
-        }
-        
-        .project-content p {
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 15px;
-        }
-        
-        .project-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        
-        .project-tag {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-        }
-        
-        /* AI Assistant Section */
-        .ai-assistant {
-            background-color: var(--light);
-        }
-        
-        .ai-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 50px;
-            align-items: center;
-        }
-        
-        .ai-info h3 {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            color: var(--secondary);
-        }
-        
-        .ai-info p {
-            margin-bottom: 20px;
-        }
-        
-        .ai-chatbot {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-        
-        .chat-header {
-            background: var(--primary);
-            color: white;
-            padding: 15px 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .chat-header i {
-            font-size: 1.5rem;
-        }
-        
-        .chat-messages {
-            height: 300px;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .message {
-            max-width: 80%;
-            padding: 12px 15px;
-            border-radius: 18px;
-            line-height: 1.4;
-        }
-        
-        .bot-message {
-            background: #f1f1f1;
-            align-self: flex-start;
-            border-bottom-left-radius: 5px;
-        }
-        
-        .user-message {
-            background: var(--primary);
-            color: white;
-            align-self: flex-end;
-            border-bottom-right-radius: 5px;
-        }
-        
-        .chat-input {
-            display: flex;
-            padding: 15px;
-            border-top: 1px solid #eee;
-        }
-        
-        .chat-input input {
-            flex: 1;
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 30px;
-            font-size: 1rem;
-            outline: none;
-        }
-        
-        .chat-input button {
-            background: var(--primary);
-            color: white;
-            border: none;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            margin-left: 10px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        
-        .chat-input button:hover {
-            background: var(--secondary);
-        }
-        
-        .suggested-questions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        
-        .suggested-question {
-            background: #f1f1f1;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-        
-        .suggested-question:hover {
-            background: #e1e1e1;
+        .feature p {
+            color: var(--text-color);
+            opacity: 0.8;
         }
         
         /* Contact Section */
@@ -580,6 +820,12 @@
         .contact-info h3 {
             margin-bottom: 20px;
             color: var(--secondary);
+        }
+        
+        .contact-info p {
+            color: var(--text-color);
+            opacity: 0.8;
+            margin-bottom: 20px;
         }
         
         .contact-details {
@@ -609,14 +855,189 @@
             width: 100%;
             padding: 12px 15px;
             margin-bottom: 20px;
-            border: 1px solid #ddd;
+            border: 1px solid rgba(0, 0, 0, 0.1);
             border-radius: 5px;
             font-size: 1rem;
+            background: var(--card-bg);
+            color: var(--text-color);
         }
         
         .contact-form textarea {
             height: 150px;
             resize: vertical;
+        }
+        
+        /* Pricing Section */
+        .pricing {
+            background-color: var(--light);
+        }
+        
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .pricing-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+            position: relative;
+        }
+        
+        .pricing-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .pricing-header {
+            padding: 30px 20px;
+            text-align: center;
+            color: white;
+        }
+        
+        .pricing-card:nth-child(1) .pricing-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+        }
+        
+        .pricing-card:nth-child(2) .pricing-header {
+            background: linear-gradient(135deg, var(--accent-alt), #ff6699);
+        }
+        
+        .pricing-card:nth-child(3) .pricing-header {
+            background: linear-gradient(135deg, var(--purple), #b366ff);
+        }
+        
+        .pricing-name {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .pricing-price {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        
+        .pricing-period {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .pricing-features {
+            padding: 30px 20px;
+        }
+        
+        .pricing-feature {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+        }
+        
+        .pricing-feature i {
+            color: var(--success);
+            margin-right: 10px;
+        }
+        
+        .pricing-feature span {
+            color: var(--text-color);
+        }
+        
+        .pricing-footer {
+            padding: 20px;
+            text-align: center;
+        }
+        
+        /* Policy Section */
+        .policy {
+            background: var(--light);
+        }
+        
+        .policy-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .policy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .policy-card {
+            background: var(--card-bg);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+            border-top: 4px solid var(--primary);
+        }
+        
+        .policy-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .policy-card:nth-child(2) {
+            border-top-color: var(--accent-alt);
+        }
+        
+        .policy-card:nth-child(3) {
+            border-top-color: var(--purple);
+        }
+        
+        .policy-card:nth-child(4) {
+            border-top-color: var(--orange);
+        }
+        
+        .policy-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+        
+        .policy-card:nth-child(2) .policy-icon {
+            color: var(--accent-alt);
+        }
+        
+        .policy-card:nth-child(3) .policy-icon {
+            color: var(--purple);
+        }
+        
+        .policy-card:nth-child(4) .policy-icon {
+            color: var(--orange);
+        }
+        
+        .policy-card h3 {
+            margin-bottom: 15px;
+            color: var(--secondary);
+        }
+        
+        .policy-card p {
+            color: var(--text-color);
+            opacity: 0.8;
+            margin-bottom: 15px;
+        }
+        
+        .policy-list {
+            list-style: none;
+            margin-top: 15px;
+        }
+        
+        .policy-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+        
+        .policy-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .policy-list li i {
+            color: var(--success);
+            margin-right: 10px;
         }
         
         /* WhatsApp Float Button */
@@ -637,11 +1058,19 @@
             align-items: center;
             justify-content: center;
             transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
         }
         
         .whatsapp-float:hover {
             background-color: #128C7E;
             transform: scale(1.1);
+            animation: none;
         }
         
         .whatsapp-text {
@@ -663,54 +1092,29 @@
             opacity: 1;
         }
         
-        /* AI Float Button */
-        .ai-float {
+        /* Toast Notification */
+        .toast {
             position: fixed;
-            width: 60px;
-            height: 60px;
-            bottom: 100px;
-            right: 25px;
-            background-color: var(--purple);
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--success);
             color: white;
-            border-radius: 50px;
-            text-align: center;
-            font-size: 24px;
+            padding: 12px 25px;
+            border-radius: 30px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .ai-float:hover {
-            background-color: #5a2d9c;
-            transform: scale(1.1);
-        }
-        
-        .ai-text {
-            position: absolute;
-            right: 70px;
-            bottom: 20px;
-            background: var(--purple);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 500;
+            z-index: 1000;
             opacity: 0;
             transition: opacity 0.3s;
-            white-space: nowrap;
         }
         
-        .ai-float:hover .ai-text {
+        .toast.show {
             opacity: 1;
         }
         
         /* Footer */
         footer {
-            background: var(--secondary);
+            background: var(--footer-bg);
             color: white;
             padding: 60px 0 20px;
         }
@@ -787,16 +1191,73 @@
             color: #ccc;
         }
         
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s, transform 0.6s;
+        }
+        
+        .animate-on-scroll.animated {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
         /* Responsive Styles */
         @media (max-width: 992px) {
             .about-content,
-            .contact-container,
-            .ai-container {
+            .contact-container {
                 grid-template-columns: 1fr;
             }
             
             .about-image {
                 order: -1;
+            }
+            
+            .search-input {
+                width: 150px;
+            }
+            
+            .search-input:focus {
+                width: 180px;
             }
         }
         
@@ -811,12 +1272,13 @@
                 left: -100%;
                 width: 80%;
                 height: calc(100vh - 70px);
-                background: white;
+                background: var(--card-bg);
                 flex-direction: column;
                 align-items: center;
                 padding-top: 50px;
                 transition: all 0.5s ease;
                 box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+                z-index: 999;
             }
             
             .nav-menu.active {
@@ -825,6 +1287,31 @@
             
             .nav-menu li {
                 margin: 15px 0;
+            }
+            
+            .header-actions {
+                gap: 10px;
+            }
+            
+            .search-container {
+                display: block;
+            }
+            
+            .notification-container {
+                display: block;
+            }
+            
+            .search-input {
+                width: 120px;
+            }
+            
+            .search-input:focus {
+                width: 150px;
+            }
+            
+            .notification-dropdown {
+                width: 280px;
+                right: -50px;
             }
             
             .hero h1 {
@@ -845,6 +1332,27 @@
                 margin-bottom: 10px;
             }
         }
+        
+        @media (max-width: 480px) {
+            .header-actions {
+                gap: 5px;
+            }
+            
+            .search-input {
+                width: 100px;
+                padding: 6px 10px;
+                font-size: 0.9rem;
+            }
+            
+            .search-input:focus {
+                width: 120px;
+            }
+            
+            .notification-dropdown {
+                width: 250px;
+                right: -80px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -854,18 +1362,48 @@
             <div class="logo">
                 <h1>DMN <span>Solutions</span></h1>
             </div>
-            <div class="mobile-toggle">
-                <i class="fas fa-bars"></i>
-            </div>
+            
             <ul class="nav-menu">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#services">Services</a></li>
+                <li><a href="#portfolio">Portfolio</a></li>
                 <li><a href="#about">About</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#ai-assistant">AI Assistant</a></li>
+                <li><a href="#pricing">Pricing</a></li>
                 <li><a href="#why-us">Why Choose Us</a></li>
+                <li><a href="#policy">Policy</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
+            
+            <div class="header-actions">
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="Search services...">
+                    <div class="search-results" id="searchResults"></div>
+                </div>
+                
+                <div class="notification-container">
+                    <div class="notification-bell" id="notificationBell">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge" id="notificationBadge">0</span>
+                    </div>
+                    <div class="notification-dropdown" id="notificationDropdown">
+                        <div class="notification-header">
+                            <h3>Notifications</h3>
+                            <button class="mark-all-read" id="markAllRead">Mark all as read</button>
+                        </div>
+                        <div class="notification-list" id="notificationList">
+                            <!-- Notifications will be dynamically added here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                
+                <div class="mobile-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -877,7 +1415,7 @@
             <div class="hero-buttons">
                 <a href="#contact" class="btn">Get In Touch</a>
                 <a href="#services" class="btn btn-accent">Our Services</a>
-                <a href="https://wa.me/254700123456?text=Hello%20DMN%20Solutions%2C%20I%20would%20like%20to%20request%20your%20services" class="btn btn-whatsapp" target="_blank">
+                <a href="https://wa.me/254111923477?text=Hello%20DMN%20Solutions%2C%20I%20would%20like%20to%20request%20your%20services" class="btn btn-whatsapp" target="_blank">
                     <i class="fab fa-whatsapp"></i> Request via WhatsApp
                 </a>
             </div>
@@ -892,66 +1430,82 @@
                 <p>We offer a comprehensive range of IT services tailored to meet your business needs</p>
             </div>
             <div class="services-grid">
-                <div class="service-card">
+                <div class="service-card animate-on-scroll">
                     <div class="service-icon">
                         <i class="fas fa-laptop-code"></i>
                     </div>
                     <div class="service-content">
                         <h3>Software Development</h3>
                         <p>Custom software solutions, web applications, and mobile apps designed to streamline your business operations and enhance productivity.</p>
-                        <a href="https://wa.me/254700123456?text=Hello%20DMN%20Solutions%2C%20I'm%20interested%20in%20your%20Software%20Development%20services" class="btn btn-whatsapp" target="_blank">Request via WhatsApp</a>
+                        <a href="https://wa.me/254111923477?text=Hello%20DMN%20Solutions%2C%20I'm%20interested%20in%20your%20Software%20Development%20services" class="btn btn-whatsapp" target="_blank">Request via WhatsApp</a>
                     </div>
                 </div>
-                <div class="service-card">
+                <div class="service-card animate-on-scroll">
                     <div class="service-icon">
                         <i class="fas fa-network-wired"></i>
                     </div>
                     <div class="service-content">
                         <h3>Network Solutions</h3>
                         <p>Design, implementation, and maintenance of secure and reliable network infrastructure for businesses of all sizes.</p>
-                        <a href="https://wa.me/254700123456?text=Hello%20DMN%20Solutions%2C%20I'm%20interested%20in%20your%20Network%20Solutions" class="btn btn-whatsapp" target="_blank">Request via WhatsApp</a>
+                        <a href="https://wa.me/254111923477?text=Hello%20DMN%20Solutions%2C%20I'm%20interested%20in%20your%20Network%20Solutions" class="btn btn-whatsapp" target="_blank">Request via WhatsApp</a>
                     </div>
                 </div>
-                <div class="service-card">
+                <div class="service-card animate-on-scroll">
                     <div class="service-icon">
                         <i class="fas fa-shield-alt"></i>
                     </div>
                     <div class="service-content">
                         <h3>Cybersecurity</h3>
                         <p>Comprehensive security solutions to protect your data, systems, and networks from evolving cyber threats.</p>
-                        <a href="https://wa.me/254700123456?text=Hello%20DMN%20Solutions%2C%20I'm%20interested%20in%20your%20Cybersecurity%20services" class="btn btn-whatsapp" target="_blank">Request via WhatsApp</a>
+                        <a href="https://wa.me/254111923477?text=Hello%20DMN%20Solutions%2C%20I'm%20interested%20in%20your%20Cybersecurity%20services" class="btn btn-whatsapp" target="_blank">Request via WhatsApp</a>
                     </div>
                 </div>
-                <div class="service-card">
+                <div class="service-card animate-on-scroll">
                     <div class="service-icon">
                         <i class="fas fa-cloud"></i>
                     </div>
                     <div class="service-content">
                         <h3>Cloud Services</h3>
                         <p>Migration, management, and optimization of cloud infrastructure to improve scalability and reduce costs.</p>
-                        <a href="https://wa.me/254700123456?text=Hello%20DMN%20Solutions%2C%20I'm%20interested%20in%20your%20Cloud%20Services" class="btn btn-whatsapp" target="_blank">Request via WhatsApp</a>
+                        <a href="https://wa.me/254111923477?text=Hello%20DMN%20Solutions%2C%20I'm%20interested%20in%20your%20Cloud%20Services" class="btn btn-whatsapp" target="_blank">Request via WhatsApp</a>
                     </div>
                 </div>
-                <div class="service-card">
+                <div class="service-card animate-on-scroll">
                     <div class="service-icon">
                         <i class="fas fa-database"></i>
                     </div>
                     <div class="service-content">
                         <h3>Data Management</h3>
                         <p>Database design, implementation, and management services to ensure your data is organized, secure, and accessible.</p>
-                        <a href="https://wa.me/254700123456?text=Hello%20DMN%20Solutions%2C%20I'm%20interested%20in%20your%20Data%20Management%20services" class="btn btn-whatsapp" target="_blank">Request via WhatsApp</a>
+                        <a href="https://wa.me/254111923477?text=Hello%20DMN%20Solutions%2C%20I'm%20interested%20in%20your%20Data%20Management%20services" class="btn btn-whatsapp" target="_blank">Request via WhatsApp</a>
                     </div>
                 </div>
-                <div class="service-card">
+                <div class="service-card animate-on-scroll">
                     <div class="service-icon">
                         <i class="fas fa-headset"></i>
                     </div>
                     <div class="service-content">
                         <h3>IT Support</h3>
                         <p>24/7 technical support and maintenance services to keep your systems running smoothly and minimize downtime.</p>
-                        <a href="https://wa.me/254700123456?text=Hello%20DMN%20Solutions%2C%20I'm%20interested%20in%20your%20IT%20Support%20services" class="btn btn-whatsapp" target="_blank">Request via WhatsApp</a>
+                        <a href="https://wa.me/254111923477?text=Hello%20DMN%20Solutions%2C%20I'm%20interested%20in%20your%20IT%20Support%20services" class="btn btn-whatsapp" target="_blank">Request via WhatsApp</a>
                     </div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio Section -->
+    <section class="portfolio" id="portfolio">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Portfolio</h2>
+                <p>Explore some of our successful projects and websites we've developed</p>
+            </div>
+            <div class="portfolio-grid" id="portfolioGrid">
+                <!-- Portfolio items will be dynamically added here -->
+            </div>
+            <div style="text-align: center; margin-top: 40px;">
+                <button id="viewMoreBtn" class="btn btn-accent">View More Projects</button>
             </div>
         </div>
     </section>
@@ -964,111 +1518,139 @@
                 <p>Learn more about DMN Solutions and our commitment to excellence</p>
             </div>
             <div class="about-content">
-                <div class="about-text">
+                <div class="about-text animate-on-scroll">
                     <h3>Your Trusted IT Partner in Kenya</h3>
                     <p>DMN Solutions is a leading provider of comprehensive IT services based in Nairobi, Kenya. With years of experience in the technology sector, we have established ourselves as a trusted partner for businesses seeking to leverage technology for growth and efficiency.</p>
                     <p>Our team of certified professionals brings expertise across various domains of information technology, ensuring that we can address the unique challenges faced by businesses in today's digital landscape.</p>
                     <p>We pride ourselves on delivering solutions that are not only technically sound but also aligned with our clients' business objectives and budget constraints.</p>
                     <div style="display: flex; gap: 15px; margin-top: 20px;">
                         <a href="#contact" class="btn">Contact Us Today</a>
-                        <a href="https://wa.me/254700123456?text=Hello%20DMN%20Solutions%2C%20I%20would%20like%20to%20learn%20more%20about%20your%20company" class="btn btn-whatsapp" target="_blank">
+                        <a href="https://wa.me/254111923477?text=Hello%20DMN%20Solutions%2C%20I%20would%20like%20to%20learn%20more%20about%20your%20company" class="btn btn-whatsapp" target="_blank">
                             <i class="fab fa-whatsapp"></i> Chat with Us
                         </a>
                     </div>
                 </div>
-                <div class="about-image">
+                <div class="about-image animate-on-scroll">
                     <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="DMN Solutions Team">
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Projects Section -->
-    <section class="projects" id="projects">
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
         <div class="container">
             <div class="section-title">
-                <h2>Our Projects</h2>
-                <p>Explore some of our successful IT implementations and solutions</p>
+                <h2>Our Pricing</h2>
+                <p>Affordable packages tailored to meet your business needs</p>
             </div>
-            <div class="projects-grid">
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="E-commerce Platform">
+            <div class="pricing-grid">
+                <div class="pricing-card animate-on-scroll">
+                    <div class="pricing-header">
+                        <div class="pricing-name">Starter</div>
+                        <div class="pricing-price">KSh 15,000</div>
+                        <div class="pricing-period">per month</div>
                     </div>
-                    <div class="project-content">
-                        <h3>E-commerce Platform</h3>
-                        <p>Custom online shopping solution with inventory management and payment integration.</p>
-                        <div class="project-tags">
-                            <span class="project-tag">Web Development</span>
-                            <span class="project-tag">E-commerce</span>
-                            <span class="project-tag">Payment Gateway</span>
+                    <div class="pricing-features">
+                        <div class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Basic Website</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>5 Pages</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Contact Form</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Mobile Responsive</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i class="fas fa-times"></i>
+                            <span>E-commerce</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i class="fas fa-times"></i>
+                            <span>Custom Features</span>
                         </div>
                     </div>
-                </div>
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="Hospital Management System">
+                    <div class="pricing-footer">
+                        <a href="https://wa.me/254111923477?text=Hello%20DMN%20Solutions%2C%20I'm%20interested%20in%20the%20Starter%20package" class="btn" target="_blank">Get Started</a>
                     </div>
-                    <div class="project-content">
-                        <h3>Hospital Management System</h3>
-                        <p>Comprehensive solution for patient records, appointments, and billing.</p>
-                        <div class="project-tags">
-                            <span class="project-tag">Software Development</span>
-                            <span class="project-tag">Healthcare</span>
-                            <span class="project-tag">Database</span>
+                </div>
+                <div class="pricing-card animate-on-scroll">
+                    <div class="pricing-header">
+                        <div class="pricing-name">Business</div>
+                        <div class="pricing-price">KSh 35,000</div>
+                        <div class="pricing-period">per month</div>
+                    </div>
+                    <div class="pricing-features">
+                        <div class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Professional Website</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>10-15 Pages</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Contact Form & Chat</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Mobile Responsive</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Basic E-commerce</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i class="fas fa-times"></i>
+                            <span>Advanced Custom Features</span>
                         </div>
                     </div>
-                </div>
-                <div class="project-card">
-                    <div class="project-image">
-                        <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80" alt="School Portal">
+                    <div class="pricing-footer">
+                        <a href="https://wa.me/254111923477?text=Hello%20DMN%20Solutions%2C%20I'm%20interested%20in%20the%20Business%20package" class="btn" target="_blank">Get Started</a>
                     </div>
-                    <div class="project-content">
-                        <h3>School Management Portal</h3>
-                        <p>Student information system with online learning capabilities.</p>
-                        <div class="project-tags">
-                            <span class="project-tag">Web Portal</span>
-                            <span class="project-tag">Education</span>
-                            <span class="project-tag">LMS</span>
+                </div>
+                <div class="pricing-card animate-on-scroll">
+                    <div class="pricing-header">
+                        <div class="pricing-name">Enterprise</div>
+                        <div class="pricing-price">KSh 75,000</div>
+                        <div class="pricing-period">per month</div>
+                    </div>
+                    <div class="pricing-features">
+                        <div class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Custom Web Application</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Unlimited Pages</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Advanced Forms & Integrations</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Mobile Responsive</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Full E-commerce</span>
+                        </div>
+                        <div class="pricing-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Custom Features & API</span>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- AI Assistant Section -->
-    <section class="ai-assistant" id="ai-assistant">
-        <div class="container">
-            <div class="section-title">
-                <h2>AI Assistant</h2>
-                <p>Ask our AI assistant anything about our services and get instant answers</p>
-            </div>
-            <div class="ai-container">
-                <div class="ai-info">
-                    <h3>Get Instant Answers to Your Questions</h3>
-                    <p>Our AI assistant is trained on information about DMN Solutions and can answer your questions about our services, pricing, expertise, and more.</p>
-                    <p>Simply type your question in the chat and get an immediate response. If the AI can't answer your question, it will connect you with a human representative.</p>
-                    <div class="suggested-questions">
-                        <div class="suggested-question" onclick="askQuestion('What services do you offer?')">What services do you offer?</div>
-                        <div class="suggested-question" onclick="askQuestion('How much does software development cost?')">How much does software development cost?</div>
-                        <div class="suggested-question" onclick="askQuestion('Do you offer IT support?')">Do you offer IT support?</div>
-                        <div class="suggested-question" onclick="askQuestion('Where are you located?')">Where are you located?</div>
-                    </div>
-                </div>
-                <div class="ai-chatbot">
-                    <div class="chat-header">
-                        <i class="fas fa-robot"></i>
-                        <h3>DMN Solutions AI Assistant</h3>
-                    </div>
-                    <div class="chat-messages" id="chatMessages">
-                        <div class="message bot-message">
-                            Hello! I'm the DMN Solutions AI assistant. How can I help you today? You can ask me about our services, pricing, expertise, or anything else about our company.
-                        </div>
-                    </div>
-                    <div class="chat-input">
-                        <input type="text" id="userInput" placeholder="Type your question here...">
-                        <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+                    <div class="pricing-footer">
+                        <a href="https://wa.me/254111923477?text=Hello%20DMN%20Solutions%2C%20I'm%20interested%20in%20the%20Enterprise%20package" class="btn" target="_blank">Get Started</a>
                     </div>
                 </div>
             </div>
@@ -1083,25 +1665,94 @@
                 <p>Discover what sets us apart from other IT service providers</p>
             </div>
             <div class="features">
-                <div class="feature">
+                <div class="feature animate-on-scroll">
                     <i class="fas fa-users"></i>
                     <h3>Expert Team</h3>
                     <p>Our certified professionals have extensive experience across various IT domains.</p>
                 </div>
-                <div class="feature">
+                <div class="feature animate-on-scroll">
                     <i class="fas fa-bolt"></i>
                     <h3>Quick Response</h3>
                     <p>We provide prompt support and solutions to minimize your business downtime.</p>
                 </div>
-                <div class="feature">
+                <div class="feature animate-on-scroll">
                     <i class="fas fa-handshake"></i>
                     <h3>Partnership Approach</h3>
                     <p>We work closely with you to understand your business and provide tailored solutions.</p>
                 </div>
-                <div class="feature">
+                <div class="feature animate-on-scroll">
                     <i class="fas fa-award"></i>
                     <h3>Proven Track Record</h3>
                     <p>We have successfully delivered projects for businesses across various industries.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Policy Section -->
+    <section class="policy" id="policy">
+        <div class="container">
+            <div class="section-title">
+                <h2>Our Policies</h2>
+                <p>Transparent policies to ensure the best experience for our clients</p>
+            </div>
+            <div class="policy-content">
+                <div class="policy-grid">
+                    <div class="policy-card animate-on-scroll">
+                        <div class="policy-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Privacy Policy</h3>
+                        <p>We are committed to protecting your privacy and ensuring the security of your personal information.</p>
+                        <ul class="policy-list">
+                            <li><i class="fas fa-check"></i> Data collection and usage transparency</li>
+                            <li><i class="fas fa-check"></i> Secure data storage and processing</li>
+                            <li><i class="fas fa-check"></i> Your rights to access and control your data</li>
+                            <li><i class="fas fa-check"></i> Compliance with data protection regulations</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="policy-card animate-on-scroll">
+                        <div class="policy-icon">
+                            <i class="fas fa-file-contract"></i>
+                        </div>
+                        <h3>Terms of Service</h3>
+                        <p>Clear guidelines on how to use our services and what to expect from our partnership.</p>
+                        <ul class="policy-list">
+                            <li><i class="fas fa-check"></i> Service usage guidelines</li>
+                            <li><i class="fas fa-check"></i> Intellectual property rights</li>
+                            <li><i class="fas fa-check"></i> Service modifications and updates</li>
+                            <li><i class="fas fa-check"></i> Termination and suspension policies</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="policy-card animate-on-scroll">
+                        <div class="policy-icon">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <h3>Data Protection</h3>
+                        <p>Our commitment to safeguarding your data through robust security measures and protocols.</p>
+                        <ul class="policy-list">
+                            <li><i class="fas fa-check"></i> Encryption and security protocols</li>
+                            <li><i class="fas fa-check"></i> Regular security audits and updates</li>
+                            <li><i class="fas fa-check"></i> Data breach response procedures</li>
+                            <li><i class="fas fa-check"></i> Employee data handling training</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="policy-card animate-on-scroll">
+                        <div class="policy-icon">
+                            <i class="fas fa-cookie-bite"></i>
+                        </div>
+                        <h3>Cookie Policy</h3>
+                        <p>Transparency about how we use cookies and similar technologies on our website.</p>
+                        <ul class="policy-list">
+                            <li><i class="fas fa-check"></i> Types of cookies we use</li>
+                            <li><i class="fas fa-check"></i> Purpose of each cookie category</li>
+                            <li><i class="fas fa-check"></i> How to manage cookie preferences</li>
+                            <li><i class="fas fa-check"></i> Third-party cookie information</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1115,7 +1766,7 @@
                 <p>Get in touch with us to discuss your IT needs</p>
             </div>
             <div class="contact-container">
-                <div class="contact-info">
+                <div class="contact-info animate-on-scroll">
                     <h3>Get In Touch</h3>
                     <p>Ready to transform your business with our IT solutions? Contact us today for a free consultation.</p>
                     <div class="contact-details">
@@ -1130,22 +1781,22 @@
                             <i class="fas fa-phone"></i>
                             <div>
                                 <h4>Call Us</h4>
-                                <p>+254 700 123 456</p>
+                                <p>+254 110 554 040</p>
                             </div>
                         </div>
                         <div class="contact-item">
                             <i class="fas fa-envelope"></i>
                             <div>
                                 <h4>Email Us</h4>
-                                <p>info@dmnsolutions.co.ke</p>
+                                <p>dariusmomanyi678@gmail.com</p>
                             </div>
                         </div>
                     </div>
-                    <a href="https://wa.me/254700123456?text=Hello%20DMN%20Solutions%2C%20I%20would%20like%20to%20request%20your%20services" class="btn btn-whatsapp" target="_blank">
+                    <a href="https://wa.me/254111923477?text=Hello%20DMN%20Solutions%2C%20I%20would%20like%20to%20request%20your%20services" class="btn btn-whatsapp" target="_blank">
                         <i class="fab fa-whatsapp"></i> Request Services via WhatsApp
                     </a>
                 </div>
-                <div class="contact-form">
+                <div class="contact-form animate-on-scroll">
                     <form>
                         <input type="text" placeholder="Your Name" required>
                         <input type="email" placeholder="Your Email" required>
@@ -1159,16 +1810,13 @@
     </section>
 
     <!-- WhatsApp Float Button -->
-    <a href="https://wa.me/254700123456?text=Hello%20DMN%20Solutions%2C%20I%20would%20like%20to%20request%20your%20services" class="whatsapp-float" target="_blank">
+    <a href="https://wa.me/254111923477?text=Hello%20DMN%20Solutions%2C%20I%20would%20like%20to%20request%20your%20services" class="whatsapp-float" target="_blank">
         <i class="fab fa-whatsapp"></i>
         <span class="whatsapp-text">Request Services</span>
     </a>
 
-    <!-- AI Float Button -->
-    <div class="ai-float" onclick="scrollToAI()">
-        <i class="fas fa-robot"></i>
-        <span class="ai-text">Ask AI Assistant</span>
-    </div>
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">URL copied to clipboard!</div>
 
     <!-- Footer -->
     <footer>
@@ -1189,10 +1837,11 @@
                     <ul>
                         <li><a href="#home">Home</a></li>
                         <li><a href="#services">Services</a></li>
+                        <li><a href="#portfolio">Portfolio</a></li>
                         <li><a href="#about">About Us</a></li>
-                        <li><a href="#projects">Projects</a></li>
-                        <li><a href="#ai-assistant">AI Assistant</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
                         <li><a href="#why-us">Why Choose Us</a></li>
+                        <li><a href="#policy">Policy</a></li>
                         <li><a href="#contact">Contact</a></li>
                     </ul>
                 </div>
@@ -1210,18 +1859,220 @@
                     <h3>Contact Info</h3>
                     <ul>
                         <li><i class="fas fa-map-marker-alt"></i> Nairobi, Kenya</li>
-                        <li><i class="fas fa-phone"></i> +254 700 123 456</li>
-                        <li><i class="fas fa-envelope"></i> info@dmnsolutions.co.ke</li>
+                        <li><i class="fas fa-phone"></i> +254  110  554 040</li>
+                        <li><i class="fas fa-envelope"></i> dariusmomanyi678@gmail.com</li>
                     </ul>
                 </div>
             </div>
             <div class="copyright">
-                <p>&copy; 2023 DMN Solutions Kenya. All Rights Reserved.</p>
+                <p>&copy; 2025 DMN Solutions Kenya. All Rights Reserved.</p>
             </div>
         </div>
     </footer>
 
     <script>
+        // Portfolio data
+        const portfolioData = [
+            {
+                title: "Elite Cut",
+                url: "https://darius2322.github.io/elite-cut/",
+                image: "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80",
+                description: "Professional barbershop website with booking system and service showcase.",
+                tags: ["Web Design", "Booking System", "Responsive"]
+            },
+            {
+                title: "DMN Furniture",
+                url: "https://darius2322.github.io/dmn-furniture/",
+                image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80",
+                description: "E-commerce furniture store with product catalog and online ordering.",
+                tags: ["E-commerce", "Product Catalog", "Online Store"]
+            },
+            {
+                title: "DMN Electrical",
+                url: "https://darius2322.github.io/dmnelectrical/",
+                image: "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80",
+                description: "Electrical services company website with service listings and contact form.",
+                tags: ["Service Business", "Contact Form", "Service Listings"]
+            },
+            {
+                title: "DMN Sale",
+                url: "https://darius2322.github.io/dmnsale/",
+                image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80",
+                description: "Online marketplace with product listings and secure payment system.",
+                tags: ["E-commerce", "Marketplace", "Payment System"]
+            },
+            {
+                title: "E Products",
+                url: "https://darius2322.github.io/E-Product/",
+                image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80",
+                description: "Online marketplace for E product listings and secure payment system.",
+                tags: ["E-commerce", "Marketplace", "Payment System"]
+            },
+            {
+                title: "MILLY",
+                url: "https://darius2322.github.io/MILLY/",
+                image: "https://images.unsplash.com/photo-1499952127939-9bbf5af6c51c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80",
+                description: "Fashion e-commerce platform with product filtering and wishlist features.",
+                tags: ["Fashion", "E-commerce", "Product Filtering"]
+            },
+            {
+                title: "Ape Thrift",
+                url: "https://darius2322.github.io/ape-thrift/",
+                image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80",
+                description: "Thrift store website with vintage clothing and accessories collection.",
+                tags: ["Thrift Store", "Vintage", "E-commerce"]
+            },
+            {
+                title: "Moflo",
+                url: "https://darius2322.github.io/moflo/",
+                image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80",
+                description: "Mobile accessories e-commerce store with product reviews and ratings.",
+                tags: ["Mobile Accessories", "E-commerce", "Reviews"]
+            },
+            {
+                title: "Garage",
+                url: "https://darius2322.github.io/garage/",
+                image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80",
+                description: "Automotive service center website with appointment booking system.",
+                tags: ["Automotive", "Service Center", "Booking System"]
+            },
+            {
+                title: "Carwash",
+                url: "https://darius2322.github.io/carwash/",
+                image: "https://images.unsplash.com/photo-1507136566006-cfc505b114fc?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80",
+                description: "Car wash service website with service packages and online booking.",
+                tags: ["Car Wash", "Service Packages", "Online Booking"]
+            },
+            {
+                title: "Groceries",
+                url: "https://darius2322.github.io/groceries/",
+                image: "https://images.unsplash.com/photo-1542838132-92c53300491e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80",
+                description: "Online grocery store with product categories and delivery options.",
+                tags: ["Grocery", "E-commerce", "Delivery"]
+            },
+            {
+                title: "Recruitment",
+                url: "https://darius2322.github.io/recruitment/",
+                image: "https://images.unsplash.com/photo-1586281380349-632531db7ed4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80",
+                description: "Recruitment agency website with job listings and application system.",
+                tags: ["Recruitment", "Job Listings", "Application System"]
+            },
+            {
+                title: "DMN Solution",
+                url: "https://darius2322.github.io/DMN-solution/",
+                image: "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80",
+                description: "IT services company website with service offerings and client testimonials.",
+                tags: ["IT Services", "Service Offerings", "Testimonials"]
+            },
+            {
+                title: "Charity",
+                url: "https://darius2322.github.io/charity/",
+                image: "https://images.unsplash.com/photo-1551836026-d5c8c2a6d7a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80",
+                description: "Charity organization website with donation system and event calendar.",
+                tags: ["Charity", "Donation System", "Event Calendar"]
+            },
+            {
+                title: "Dairy",
+                url: "https://darius2322.github.io/dairy/",
+                image: "https://images.unsplash.com/photo-1566474595102-4d4e3e5d3b2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80",
+                description: "Dairy products e-commerce store with farm-to-table concept.",
+                tags: ["Dairy", "E-commerce", "Farm-to-Table"]
+            },
+            {
+                title: "Beauty Parlour",
+                url: "https://darius2322.github.io/beauty-palour/",
+                image: "https://images.unsplash.com/photo-1560066984-138dadb4c035?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80",
+                description: "Beauty salon website with service menu and appointment booking.",
+                tags: ["Beauty Salon", "Service Menu", "Appointment Booking"]
+            }
+        ];
+
+        // Initialize portfolio with first 6 items
+        let visibleItems = 6;
+        const portfolioGrid = document.getElementById('portfolioGrid');
+        const viewMoreBtn = document.getElementById('viewMoreBtn');
+
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        
+        if (currentTheme === 'dark') {
+            themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        } else {
+            themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+        }
+        
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            if (newTheme === 'dark') {
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            } else {
+                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+            }
+        });
+
+        function renderPortfolioItems() {
+            portfolioGrid.innerHTML = '';
+            const itemsToShow = portfolioData.slice(0, visibleItems);
+            
+            itemsToShow.forEach(item => {
+                const portfolioCard = document.createElement('div');
+                portfolioCard.className = 'portfolio-card animate-on-scroll';
+                portfolioCard.innerHTML = `
+                    <div class="portfolio-image">
+                        <img src="${item.image}" alt="${item.title}">
+                        <div class="portfolio-overlay">
+                            <button class="btn" onclick="requestSite('${item.title}', '${item.url}')">Request Similar Site</button>
+                        </div>
+                    </div>
+                    <div class="portfolio-content">
+                        <h3>${item.title}</h3>
+                        <p>${item.description}</p>
+                        <div class="portfolio-tags">
+                            ${item.tags.map(tag => `<span class="portfolio-tag">${tag}</span>`).join('')}
+                        </div>
+                        <div class="portfolio-actions">
+                            <a href="${item.url}" target="_blank" class="btn">View Site</a>
+                            <button class="btn copy-btn" onclick="copyToClipboard('${item.url}')">Copy URL</button>
+                        </div>
+                    </div>
+                `;
+                portfolioGrid.appendChild(portfolioCard);
+            });
+            
+            // Show/hide view more button
+            if (visibleItems >= portfolioData.length) {
+                viewMoreBtn.style.display = 'none';
+            } else {
+                viewMoreBtn.style.display = 'inline-block';
+            }
+            
+            // Trigger animations
+            setTimeout(() => {
+                document.querySelectorAll('.animate-on-scroll').forEach(el => {
+                    const elementTop = el.getBoundingClientRect().top;
+                    const elementVisible = 150;
+                    
+                    if (elementTop < window.innerHeight - elementVisible) {
+                        el.classList.add('animated');
+                    }
+                });
+            }, 100);
+        }
+
+        // View more functionality
+        viewMoreBtn.addEventListener('click', () => {
+            visibleItems += 6;
+            renderPortfolioItems();
+        });
+
         // Mobile Menu Toggle
         const mobileToggle = document.querySelector('.mobile-toggle');
         const navMenu = document.querySelector('.nav-menu');
@@ -1259,115 +2110,254 @@
         window.addEventListener('scroll', () => {
             const header = document.querySelector('header');
             if(window.scrollY > 100) {
-                header.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+                header.style.backgroundColor = 'var(--header-bg)';
                 header.style.backdropFilter = 'blur(10px)';
             } else {
-                header.style.backgroundColor = 'white';
-                header.style.backdropFilter = 'none';
+                header.style.backgroundColor = 'var(--header-bg)';
+                header.style.backdropFilter = 'blur(10px)';
             }
         });
 
-        // AI Assistant functionality
-        function scrollToAI() {
-            document.getElementById('ai-assistant').scrollIntoView({ behavior: 'smooth' });
+        // Notification functionality
+        const notificationBell = document.getElementById('notificationBell');
+        const notificationDropdown = document.getElementById('notificationDropdown');
+        const notificationBadge = document.getElementById('notificationBadge');
+        const notificationList = document.getElementById('notificationList');
+        const markAllReadBtn = document.getElementById('markAllRead');
+        
+        // Function to format time difference
+        function formatTimeDifference(timestamp) {
+            const now = new Date();
+            const diffMs = now - timestamp;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+            
+            if (diffMins < 1) return 'Just now';
+            if (diffMins < 60) return `${diffMins} min ago`;
+            if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+            if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+            
+            return timestamp.toLocaleDateString();
+        }
+        
+        // Function to get notifications from localStorage or initialize with sample data
+        function getNotifications() {
+            let notifications = localStorage.getItem('dmnNotifications');
+            
+            if (!notifications) {
+                // Initialize with sample notifications if none exist
+                const sampleNotifications = [
+                    {
+                        id: 1,
+                        title: "Welcome to DMN Solutions",
+                        message: "Thank you for visiting our website. Explore our services and portfolio.",
+                        timestamp: new Date(Date.now() - 86400000).getTime(), // 1 day ago
+                        read: false
+                    },
+                    {
+                        id: 2,
+                        title: "New Portfolio Project Added",
+                        message: "Check out our latest e-commerce website for a furniture store.",
+                        timestamp: new Date(Date.now() - 172800000).getTime(), // 2 days ago
+                        read: false
+                    },
+                    {
+                        id: 3,
+                        title: "Website Maintenance Completed",
+                        message: "Our website has been updated with new features and improvements.",
+                        timestamp: new Date(Date.now() - 259200000).getTime(), // 3 days ago
+                        read: true
+                    }
+                ];
+                localStorage.setItem('dmnNotifications', JSON.stringify(sampleNotifications));
+                return sampleNotifications;
+            }
+            
+            return JSON.parse(notifications);
+        }
+        
+        // Function to save notifications to localStorage
+        function saveNotifications(notifications) {
+            localStorage.setItem('dmnNotifications', JSON.stringify(notifications));
+        }
+        
+        // Function to render notifications
+        function renderNotifications() {
+            const notifications = getNotifications();
+            const unreadCount = notifications.filter(notification => !notification.read).length;
+            
+            notificationBadge.textContent = unreadCount;
+            if (unreadCount === 0) {
+                notificationBadge.style.display = 'none';
+            } else {
+                notificationBadge.style.display = 'flex';
+            }
+            
+            notificationList.innerHTML = '';
+            
+            if (notifications.length === 0) {
+                const noNotifications = document.createElement('div');
+                noNotifications.className = 'no-notifications';
+                noNotifications.textContent = 'No notifications';
+                notificationList.appendChild(noNotifications);
+                return;
+            }
+            
+            notifications.forEach(notification => {
+                const notificationItem = document.createElement('div');
+                notificationItem.className = `notification-item ${notification.read ? '' : 'unread'}`;
+                notificationItem.innerHTML = `
+                    <h4>${notification.title}</h4>
+                    <p>${notification.message}</p>
+                    <div class="notification-time">${formatTimeDifference(new Date(notification.timestamp))}</div>
+                `;
+                notificationItem.addEventListener('click', () => {
+                    if (!notification.read) {
+                        notification.read = true;
+                        saveNotifications(notifications);
+                        renderNotifications();
+                    }
+                });
+                notificationList.appendChild(notificationItem);
+            });
+        }
+        
+        notificationBell.addEventListener('click', () => {
+            notificationDropdown.classList.toggle('active');
+        });
+        
+        markAllReadBtn.addEventListener('click', () => {
+            const notifications = getNotifications();
+            notifications.forEach(notification => {
+                notification.read = true;
+            });
+            saveNotifications(notifications);
+            renderNotifications();
+        });
+        
+        // Close notification dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!notificationBell.contains(e.target) && !notificationDropdown.contains(e.target)) {
+                notificationDropdown.classList.remove('active');
+            }
+        });
+
+        // Search functionality
+        const searchInput = document.querySelector('.search-input');
+        const searchResults = document.getElementById('searchResults');
+        
+        const searchData = [
+            { title: 'Software Development', category: 'Services', link: '#services' },
+            { title: 'Network Solutions', category: 'Services', link: '#services' },
+            { title: 'Cybersecurity', category: 'Services', link: '#services' },
+            { title: 'Cloud Services', category: 'Services', link: '#services' },
+            { title: 'Data Management', category: 'Services', link: '#services' },
+            { title: 'IT Support', category: 'Services', link: '#services' },
+            { title: 'Portfolio', category: 'Our Work', link: '#portfolio' },
+            { title: 'Pricing', category: 'Plans', link: '#pricing' },
+            { title: 'Why Choose Us', category: 'About', link: '#why-us' },
+            { title: 'Contact Us', category: 'Support', link: '#contact' },
+            { title: 'Privacy Policy', category: 'Policy', link: '#policy' },
+            { title: 'Terms of Service', category: 'Policy', link: '#policy' }
+        ];
+        
+        searchInput.addEventListener('input', function() {
+            const query = this.value.toLowerCase();
+            searchResults.innerHTML = '';
+            
+            if (query.length < 2) {
+                searchResults.style.display = 'none';
+                return;
+            }
+            
+            const filteredResults = searchData.filter(item => 
+                item.title.toLowerCase().includes(query) || 
+                item.category.toLowerCase().includes(query)
+            );
+            
+            if (filteredResults.length > 0) {
+                filteredResults.forEach(result => {
+                    const resultItem = document.createElement('div');
+                    resultItem.className = 'search-result-item';
+                    resultItem.innerHTML = `
+                        <div style="font-weight: 600;">${result.title}</div>
+                        <div style="font-size: 0.8rem; color: var(--text-color); opacity: 0.7;">${result.category}</div>
+                    `;
+                    resultItem.addEventListener('click', () => {
+                        window.location.href = result.link;
+                        searchResults.style.display = 'none';
+                        searchInput.value = '';
+                    });
+                    searchResults.appendChild(resultItem);
+                });
+                searchResults.style.display = 'block';
+            } else {
+                const noResults = document.createElement('div');
+                noResults.className = 'search-result-item';
+                noResults.textContent = 'No results found';
+                searchResults.appendChild(noResults);
+                searchResults.style.display = 'block';
+            }
+        });
+        
+        // Close search results when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                searchResults.style.display = 'none';
+            }
+        });
+
+        // Portfolio site request function
+        function requestSite(siteName, siteUrl) {
+            const message = `Hello DMN Solutions, I'm interested in a website similar to ${siteName} (${siteUrl}). Can you provide more information?`;
+            const encodedMessage = encodeURIComponent(message);
+            window.open(`https://wa.me/254111923477?text=${encodedMessage}`, '_blank');
         }
 
-        function askQuestion(question) {
-            document.getElementById('userInput').value = question;
-            sendMessage();
+        // Copy to clipboard function
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('URL copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                showToast('Failed to copy URL');
+            });
         }
 
-        function sendMessage() {
-            const userInput = document.getElementById('userInput');
-            const message = userInput.value.trim();
+        // Toast notification function
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
             
-            if (message === '') return;
-            
-            // Add user message to chat
-            addMessageToChat(message, 'user');
-            
-            // Clear input
-            userInput.value = '';
-            
-            // Simulate AI response after a short delay
             setTimeout(() => {
-                const response = generateAIResponse(message);
-                addMessageToChat(response, 'bot');
-            }, 1000);
+                toast.classList.remove('show');
+            }, 3000);
         }
 
-        function addMessageToChat(message, sender) {
-            const chatMessages = document.getElementById('chatMessages');
-            const messageElement = document.createElement('div');
-            messageElement.classList.add('message');
-            messageElement.classList.add(sender === 'user' ? 'user-message' : 'bot-message');
-            messageElement.textContent = message;
+        // Scroll animations
+        const animateOnScroll = () => {
+            const elements = document.querySelectorAll('.animate-on-scroll');
             
-            chatMessages.appendChild(messageElement);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < window.innerHeight - elementVisible) {
+                    element.classList.add('animated');
+                }
+            });
+        };
+        
+        window.addEventListener('scroll', animateOnScroll);
+        // Initial check on page load
+        animateOnScroll();
 
-        function generateAIResponse(userMessage) {
-            const lowerMessage = userMessage.toLowerCase();
-            
-            // Service-related questions
-            if (lowerMessage.includes('service') || lowerMessage.includes('offer') || lowerMessage.includes('provide')) {
-                return "We offer a wide range of IT services including software development, network solutions, cybersecurity, cloud services, data management, and IT support. Is there a specific service you'd like to know more about?";
-            }
-            
-            if (lowerMessage.includes('software') || lowerMessage.includes('development') || lowerMessage.includes('app')) {
-                return "Our software development services include custom applications, web development, mobile apps, and enterprise software solutions. We use modern technologies and agile methodologies to deliver high-quality software tailored to your business needs.";
-            }
-            
-            if (lowerMessage.includes('network') || lowerMessage.includes('infrastructure')) {
-                return "We design, implement, and maintain secure and reliable network infrastructure for businesses of all sizes. This includes LAN/WAN setup, wireless networks, VPNs, and network security solutions.";
-            }
-            
-            if (lowerMessage.includes('cyber') || lowerMessage.includes('security') || lowerMessage.includes('secure')) {
-                return "Our cybersecurity services include vulnerability assessments, penetration testing, security monitoring, incident response, and security awareness training. We help protect your business from evolving cyber threats.";
-            }
-            
-            if (lowerMessage.includes('cloud')) {
-                return "We provide cloud migration, management, and optimization services. We work with all major cloud platforms (AWS, Azure, Google Cloud) to help businesses improve scalability, reduce costs, and enhance security.";
-            }
-            
-            if (lowerMessage.includes('data') || lowerMessage.includes('database')) {
-                return "Our data management services include database design, implementation, migration, optimization, and ongoing management. We ensure your data is organized, secure, and accessible when you need it.";
-            }
-            
-            if (lowerMessage.includes('support') || lowerMessage.includes('help') || lowerMessage.includes('maintenance')) {
-                return "We offer 24/7 IT support and maintenance services to keep your systems running smoothly. Our support includes troubleshooting, system updates, performance optimization, and proactive monitoring to minimize downtime.";
-            }
-            
-            // Pricing questions
-            if (lowerMessage.includes('price') || lowerMessage.includes('cost') || lowerMessage.includes('how much')) {
-                return "Our pricing depends on the specific services and scope of work required. We offer customized quotes based on your unique needs. Would you like to schedule a free consultation to discuss your requirements and get a detailed quote?";
-            }
-            
-            // Location questions
-            if (lowerMessage.includes('where') || lowerMessage.includes('location') || lowerMessage.includes('based')) {
-                return "We are based in Nairobi, Kenya, and serve clients throughout Kenya and East Africa. We also provide remote support and services to clients worldwide.";
-            }
-            
-            // Company information
-            if (lowerMessage.includes('about') || lowerMessage.includes('company') || lowerMessage.includes('who')) {
-                return "DMN Solutions is a leading IT services provider in Kenya with years of experience helping businesses leverage technology for growth. Our team of certified professionals delivers comprehensive IT solutions tailored to each client's specific needs.";
-            }
-            
-            // Contact information
-            if (lowerMessage.includes('contact') || lowerMessage.includes('phone') || lowerMessage.includes('email') || lowerMessage.includes('reach')) {
-                return "You can contact us by phone at +254 700 123 456, by email at info@dmnsolutions.co.ke, or through WhatsApp using the button on our website. You can also fill out the contact form and we'll get back to you promptly.";
-            }
-            
-            // Default response for unrecognized questions
-            return "I'm not sure I understand your question. Could you please rephrase it? You can ask me about our services, pricing, expertise, or contact information. If I can't help, I'll connect you with a human representative.";
-        }
-
-        // Allow sending message with Enter key
-        document.getElementById('userInput').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
+        // Initialize portfolio and notifications on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderPortfolioItems();
+            renderNotifications();
         });
     </script>
 </body>
