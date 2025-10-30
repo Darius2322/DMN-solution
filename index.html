@@ -141,10 +141,18 @@
         .btn-whatsapp {
             background: #25D366;
             box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+            border: none;
+            cursor: pointer;
+            position: relative;
+            z-index: 10;
         }
         
         .btn-whatsapp:hover {
             background: #128C7E;
+        }
+        
+        .btn-whatsapp:active {
+            transform: scale(0.98);
         }
         
         .btn-accent {
@@ -319,6 +327,40 @@
         
         .search-result-item:last-child {
             border-bottom: none;
+        }
+        
+        /* Mobile Search Icon */
+        .mobile-search-icon {
+            display: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            color: var(--primary);
+        }
+        
+        .mobile-search-container {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--header-bg);
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            z-index: 999;
+        }
+        
+        .mobile-search-container.active {
+            display: block;
+        }
+        
+        .mobile-search-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 30px;
+            outline: none;
+            background: var(--card-bg);
+            color: var(--text-color);
         }
         
         /* Notification Bell */
@@ -607,6 +649,8 @@
         
         .service-content {
             padding: 25px;
+            position: relative;
+            z-index: 2;
         }
         
         .service-content h3 {
@@ -1163,6 +1207,31 @@
             }
         }
         
+        /* Toast Notification */
+        .toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: var(--success);
+            color: white;
+            text-align: center;
+            border-radius: 5px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1000;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 30px;
+            font-size: 17px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: visibility 0s, opacity 0.5s;
+            opacity: 0;
+        }
+        
+        .toast.show {
+            visibility: visible;
+            opacity: 1;
+        }
+        
         /* Animations */
         @keyframes fadeInUp {
             from {
@@ -1224,6 +1293,7 @@
                 padding-top: 50px;
                 transition: left 0.3s;
                 box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
+                z-index: 999;
             }
             
             .nav-menu.active {
@@ -1250,6 +1320,14 @@
             .services-grid,
             .portfolio-grid {
                 grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .search-container {
+                display: none;
+            }
+            
+            .mobile-search-icon {
+                display: block;
             }
         }
         
@@ -1287,6 +1365,10 @@
             
             .notification-dropdown {
                 width: 280px;
+            }
+            
+            .header-actions {
+                gap: 10px;
             }
         }
         
@@ -1339,6 +1421,10 @@
             .request-similar-btn {
                 display: none !important;
             }
+            
+            .notification-container {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -1372,6 +1458,10 @@
                     <div class="search-results" id="searchResults"></div>
                 </div>
                 
+                <div class="mobile-search-icon" id="mobileSearchIcon">
+                    <i class="fas fa-search"></i>
+                </div>
+                
                 <div class="notification-container">
                     <div class="notification-bell" id="notificationBell">
                         <i class="fas fa-bell"></i>
@@ -1383,17 +1473,17 @@
                             <button class="mark-all-read" id="markAllRead">Mark all as read</button>
                         </div>
                         <div class="notification-list" id="notificationList">
-                            <div class="notification-item unread">
+                            <div class="notification-item unread" data-id="1">
                                 <h4>New Project Request</h4>
                                 <p>John Doe requested a website redesign</p>
                                 <span class="notification-time">10 min ago</span>
                             </div>
-                            <div class="notification-item unread">
+                            <div class="notification-item unread" data-id="2">
                                 <h4>Payment Received</h4>
                                 <p>Payment for E-commerce project received</p>
                                 <span class="notification-time">1 hour ago</span>
                             </div>
-                            <div class="notification-item">
+                            <div class="notification-item" data-id="3">
                                 <h4>Meeting Reminder</h4>
                                 <p>Meeting with client at 2:00 PM</p>
                                 <span class="notification-time">2 hours ago</span>
@@ -1411,6 +1501,12 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Mobile Search Container -->
+        <div class="mobile-search-container" id="mobileSearchContainer">
+            <input type="text" class="mobile-search-input" placeholder="Search services...">
+            <div class="search-results" id="mobileSearchResults"></div>
+        </div>
     </header>
 
     <!-- Hero Section -->
@@ -1421,7 +1517,7 @@
             <div class="hero-buttons">
                 <a href="#contact" class="btn">Get Started</a>
                 <a href="#portfolio" class="btn btn-accent">View Portfolio</a>
-                <a href="https://wa.me/254110554040" class="btn btn-whatsapp"><i class="fab fa-whatsapp"></i> Chat on WhatsApp</a>
+                <button class="btn btn-whatsapp" onclick="openWhatsApp('General Inquiry')"><i class="fab fa-whatsapp"></i> Chat on WhatsApp</button>
             </div>
         </div>
     </section>
@@ -1442,7 +1538,9 @@
                     <div class="service-content">
                         <h3>Web Development</h3>
                         <p>Custom websites and web applications built with the latest technologies to meet your business needs.</p>
-                        <a href="https://wa.me/254110554040?text=Hello%20DMN%20Solutions%2C%20I'm%20interested%20in%20your%20Web%20Development%20services" class="btn btn-whatsapp" target="_blank">Request via WhatsApp</a>
+                        <button class="btn btn-whatsapp" onclick="openWhatsApp('Web Development')">
+                            <i class="fab fa-whatsapp"></i> request now
+                        </button>
                     </div>
                 </div>
                 
@@ -1453,7 +1551,9 @@
                     <div class="service-content">
                         <h3>Mobile App Development</h3>
                         <p>Native and cross-platform mobile applications for iOS and Android devices.</p>
-                        <a href="https://wa.me/254110554040?text=Hello%20DMN%20Solutions%2C%20I'm%20interested%20in%20your%20Mobile%20App%20Development%20services" class="btn btn-whatsapp" target="_blank">Request via WhatsApp</a>
+                        <button class="btn btn-whatsapp" onclick="openWhatsApp('Mobile App Development')">
+                            <i class="fab fa-whatsapp"></i> request now
+                        </button>
                     </div>
                 </div>
                 
@@ -1464,7 +1564,9 @@
                     <div class="service-content">
                         <h3>E-commerce Solutions</h3>
                         <p>Complete online store setup with payment integration and inventory management.</p>
-                        <a href="https://wa.me/254110554040?text=Hello%20DMN%20Solutions%2C%20I'm%20interested%20in%20your%20E-commerce%20Solutions" class="btn btn-whatsapp" target="_blank">Request via WhatsApp</a>
+                        <button class="btn btn-whatsapp" onclick="openWhatsApp('E-commerce Solutions')">
+                            <i class="fab fa-whatsapp"></i> request now
+                        </button>
                     </div>
                 </div>
                 
@@ -1475,7 +1577,9 @@
                     <div class="service-content">
                         <h3>SEO & Digital Marketing</h3>
                         <p>Improve your online visibility and reach more customers with our digital marketing strategies.</p>
-                        <a href="https://wa.me/254110554040?text=Hello%20DMN%20Solutions%2C%20I'm%20interested%20in%20your%20SEO%20%26%20Digital%20Marketing%20services" class="btn btn-whatsapp" target="_blank">Request via WhatsApp</a>
+                        <button class="btn btn-whatsapp" onclick="openWhatsApp('SEO & Digital Marketing')">
+                            <i class="fab fa-whatsapp"></i> request now
+                        </button>
                     </div>
                 </div>
                 
@@ -1486,7 +1590,9 @@
                     <div class="service-content">
                         <h3>UI/UX Design</h3>
                         <p>Beautiful and intuitive user interfaces that enhance user experience and engagement.</p>
-                        <a href="https://wa.me/254110554040?text=Hello%20DMN%20Solutions%2C%20I'm%20interested%20in%20your%20UI%2FUX%20Design%20services" class="btn btn-whatsapp" target="_blank">Request via WhatsApp</a>
+                        <button class="btn btn-whatsapp" onclick="openWhatsApp('UI/UX Design')">
+                            <i class="fab fa-whatsapp"></i> request now
+                        </button>
                     </div>
                 </div>
                 
@@ -1497,7 +1603,9 @@
                     <div class="service-content">
                         <h3>Cloud Solutions</h3>
                         <p>Secure and scalable cloud infrastructure to support your business operations.</p>
-                        <a href="https://wa.me/254110554040?text=Hello%20DMN%20Solutions%2C%20I'm%20interested%20in%20your%20Cloud%20Solutions" class="btn btn-whatsapp" target="_blank">Request via WhatsApp</a>
+                        <button class="btn btn-whatsapp" onclick="openWhatsApp('Cloud Solutions')">
+                            <i class="fab fa-whatsapp"></i> request now
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1767,10 +1875,10 @@
     </footer>
 
     <!-- WhatsApp Float Button -->
-    <a href="https://wa.me/254110554040?text=Hello%20DMN%20Solutions%2C%20I%20would%20like%20to%20request%20your%20services" class="whatsapp-float" target="_blank">
+    <div class="whatsapp-float" onclick="openWhatsApp('General Inquiry')">
         <i class="fab fa-whatsapp"></i>
         <span class="whatsapp-text">Request Services</span>
-    </a>
+    </div>
 
     <!-- Floating Portfolio Button -->
     <div class="floating-portfolio-btn">
@@ -1936,7 +2044,7 @@
                     <div class="portfolio-image">
                         <img src="${item.image}" alt="${item.title}">
                         <div class="portfolio-overlay">
-                            <button class="btn" onclick="requestSite('${item.title}', '${item.url}')">Request Similar Site</button>
+                            <button class="btn" onclick="openWhatsApp('Website similar to ${item.title}')">Request Similar Site</button>
                         </div>
                     </div>
                     <div class="portfolio-content">
@@ -2020,15 +2128,64 @@
         const notificationList = document.getElementById('notificationList');
         const markAllReadBtn = document.getElementById('markAllRead');
         
+        // Load read notifications from localStorage
+        let readNotifications = JSON.parse(localStorage.getItem('readNotifications')) || [];
+        
+        function updateNotificationBadge() {
+            const unreadCount = document.querySelectorAll('.notification-item.unread').length;
+            if (unreadCount > 0) {
+                notificationBadge.textContent = unreadCount;
+                notificationBadge.style.display = 'flex';
+            } else {
+                notificationBadge.style.display = 'none';
+            }
+        }
+        
+        // Mark notifications as read based on localStorage
+        document.querySelectorAll('.notification-item').forEach(item => {
+            const id = item.getAttribute('data-id');
+            if (readNotifications.includes(id)) {
+                item.classList.remove('unread');
+            }
+        });
+        
+        updateNotificationBadge();
+        
         notificationBell.addEventListener('click', () => {
             notificationDropdown.classList.toggle('active');
+            
+            // Mark all visible notifications as read when dropdown is opened
+            if (notificationDropdown.classList.contains('active')) {
+                document.querySelectorAll('.notification-item.unread').forEach(item => {
+                    const id = item.getAttribute('data-id');
+                    if (!readNotifications.includes(id)) {
+                        readNotifications.push(id);
+                    }
+                    item.classList.remove('unread');
+                });
+                
+                // Save to localStorage
+                localStorage.setItem('readNotifications', JSON.stringify(readNotifications));
+                
+                // Update badge
+                updateNotificationBadge();
+            }
         });
         
         markAllReadBtn.addEventListener('click', () => {
             document.querySelectorAll('.notification-item.unread').forEach(item => {
+                const id = item.getAttribute('data-id');
+                if (!readNotifications.includes(id)) {
+                    readNotifications.push(id);
+                }
                 item.classList.remove('unread');
             });
-            notificationBadge.style.display = 'none';
+            
+            // Save to localStorage
+            localStorage.setItem('readNotifications', JSON.stringify(readNotifications));
+            
+            // Update badge
+            updateNotificationBadge();
         });
         
         // Close notification dropdown when clicking outside
@@ -2038,9 +2195,25 @@
             }
         });
 
-        // Search functionality
-        const searchInput = document.querySelector('.search-input');
-        const searchResults = document.getElementById('searchResults');
+        // Mobile Search Functionality
+        const mobileSearchIcon = document.getElementById('mobileSearchIcon');
+        const mobileSearchContainer = document.getElementById('mobileSearchContainer');
+        const mobileSearchInput = document.querySelector('.mobile-search-input');
+        const mobileSearchResults = document.getElementById('mobileSearchResults');
+        
+        mobileSearchIcon.addEventListener('click', () => {
+            mobileSearchContainer.classList.toggle('active');
+            if (mobileSearchContainer.classList.contains('active')) {
+                mobileSearchInput.focus();
+            }
+        });
+        
+        // Close mobile search when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!mobileSearchIcon.contains(e.target) && !mobileSearchContainer.contains(e.target)) {
+                mobileSearchContainer.classList.remove('active');
+            }
+        });
         
         // Search data
         const searchData = [
@@ -2063,12 +2236,15 @@
             { title: 'Terms of Service', category: 'Policy', link: '#policy' }
         ];
         
-        searchInput.addEventListener('input', function() {
-            const query = this.value.toLowerCase();
-            searchResults.innerHTML = '';
+        // Search functionality for desktop
+        const searchInput = document.querySelector('.search-input');
+        const searchResults = document.getElementById('searchResults');
+        
+        function performSearch(query, resultsContainer) {
+            resultsContainer.innerHTML = '';
             
             if (query.length < 2) {
-                searchResults.style.display = 'none';
+                resultsContainer.style.display = 'none';
                 return;
             }
             
@@ -2087,19 +2263,29 @@
                     `;
                     resultItem.addEventListener('click', () => {
                         window.location.href = result.link;
-                        searchResults.style.display = 'none';
+                        resultsContainer.style.display = 'none';
                         searchInput.value = '';
+                        mobileSearchInput.value = '';
+                        mobileSearchContainer.classList.remove('active');
                     });
-                    searchResults.appendChild(resultItem);
+                    resultsContainer.appendChild(resultItem);
                 });
-                searchResults.style.display = 'block';
+                resultsContainer.style.display = 'block';
             } else {
                 const noResults = document.createElement('div');
                 noResults.className = 'search-result-item';
                 noResults.textContent = 'No results found';
-                searchResults.appendChild(noResults);
-                searchResults.style.display = 'block';
+                resultsContainer.appendChild(noResults);
+                resultsContainer.style.display = 'block';
             }
+        }
+        
+        searchInput.addEventListener('input', function() {
+            performSearch(this.value.toLowerCase(), searchResults);
+        });
+        
+        mobileSearchInput.addEventListener('input', function() {
+            performSearch(this.value.toLowerCase(), mobileSearchResults);
         });
         
         // Close search results when clicking outside
@@ -2109,11 +2295,15 @@
             }
         });
 
-        // Portfolio site request function
-        function requestSite(siteName, siteUrl) {
-            const message = `Hello DMN Solutions, I'm interested in a website similar to ${siteName} (${siteUrl}). Can you provide more information?`;
+        // WhatsApp Service Request Function - CORRECTED
+        function openWhatsApp(serviceName) {
+            const phoneNumber = "254110554040";
+            const message = `Hello DMN Solutions! I am interested in your ${serviceName} services. Could you please provide me with more information about pricing, timelines, and requirements?`;
             const encodedMessage = encodeURIComponent(message);
-            window.open(`https://wa.me/254110554040?text=${encodedMessage}`, '_blank');
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+            
+            // Open WhatsApp in a new tab
+            window.open(whatsappUrl, '_blank');
         }
 
         // Copy to clipboard function
