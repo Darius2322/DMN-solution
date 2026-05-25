@@ -1001,40 +1001,6 @@
     .ct-suggestion{background:rgba(245,158,11,0.1);color:#f59e0b;}
 
     /* ── 3-Steps Setup ─────────────────────────────────────────────────────── */
-    .three-steps-section{
-        background:linear-gradient(135deg,var(--surface2),var(--surface3));
-        padding:60px 0 !important;
-        border-top:1px solid var(--border);padding:80px 0;
-    }
-    .steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
-    @media(max-width:768px){.steps-grid{grid-template-columns:1fr;}}
-    .step-card{
-        background:var(--card);border:1px solid var(--border);border-radius:20px;
-        padding:28px;position:relative;overflow:hidden;transition:all 0.25s;
-    }
-    .step-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);}
-    .step-card::before{
-        content:attr(data-num);position:absolute;top:-10px;right:16px;
-        font-family:'Syne',sans-serif;font-size:5rem;font-weight:900;
-        color:var(--border);line-height:1;pointer-events:none;
-    }
-    .step-icon{
-        width:52px;height:52px;border-radius:14px;display:flex;align-items:center;
-        justify-content:center;font-size:1.4rem;margin-bottom:18px;
-    }
-    .step-card h3{font-size:1.05rem;font-weight:800;margin-bottom:8px;}
-    .step-card p{font-size:0.83rem;color:var(--text2);line-height:1.7;margin-bottom:14px;}
-    .step-action-btn{
-        display:inline-flex;align-items:center;gap:8px;padding:9px 16px;
-        border-radius:10px;font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;
-        cursor:pointer;border:none;transition:all 0.2s;text-decoration:none;
-    }
-    .step-sql-block{
-        background:var(--surface2);border:1px solid var(--border);border-radius:10px;
-        padding:10px 13px;font-family:monospace;font-size:0.73rem;color:var(--text2);
-        line-height:1.6;margin-top:8px;max-height:120px;overflow-y:auto;
-    }
-
     /* ── Password field with eye toggle ──────────────────────────────────── */
     .pw-wrap { position:relative; }
     .pw-wrap input { padding-right:40px !important; }
@@ -2093,139 +2059,6 @@
                 <h4>Disputes</h4>
                 <p>Any disputes will first be handled through direct negotiation. We are committed to finding a fair resolution for all parties.</p>
             </div>
-        </div>
-    </div>
-</section>
-
-<!-- ─── 3 THINGS TO DO ─── -->
-<section class="three-steps-section" id="setup-guide">
-    <div class="container">
-        <div class="section-header center fade-up">
-            <div class="section-tag">Quick Setup</div>
-            <h2>3 Things to Activate Everything</h2>
-            <p>Your site is live — do these 3 steps once to unlock Google Sign-In, the database, and your admin access.</p>
-        </div>
-        <div class="steps-grid">
-
-            <!-- Step 1: SQL -->
-            <div class="step-card fade-up" data-num="1">
-                <div class="step-icon" style="background:rgba(37,99,235,0.1);color:var(--electric)">
-                    <i class="fas fa-database"></i>
-                </div>
-                <h3>Run the SQL Setup</h3>
-                <p>Open your <strong>Supabase Dashboard → SQL Editor</strong> and run this script. It creates all tables (portfolio, feedback, badges, requests, comments) with the right security rules.</p>
-                <div class="step-sql-block">-- Paste in Supabase → SQL Editor
--- ── 1. PROFILES (admin role stored here, not in code) ──
-create table if not exists profiles (
-  id uuid default gen_random_uuid() primary key,
-  user_id uuid references auth.users unique not null,
-  email text,
-  full_name text,
-  role text default 'member' check (role in ('member','admin','moderator')),
-  created_at timestamptz default now()
-);
-alter table profiles enable row level security;
-create policy "own_profile" on profiles for select using (auth.uid() = user_id);
-create policy "own_update" on profiles for update using (auth.uid() = user_id);
-create policy "admin_read_all" on profiles for select using (
-  exists(select 1 from profiles where user_id=auth.uid() and role='admin'));
-create policy "admin_update_all" on profiles for update using (
-  exists(select 1 from profiles where user_id=auth.uid() and role='admin'));
-
--- ── Auto-create profile on signup ──
-create or replace function public.handle_new_user()
-returns trigger language plpgsql security definer as $$
-begin
-  insert into public.profiles(user_id,email,full_name)
-  values(new.id, new.email, new.raw_user_meta_data->>'full_name');
-  return new;
-end;$$;
-create or replace trigger on_auth_user_created
-  after insert on auth.users
-  for each row execute procedure public.handle_new_user();
-
--- ── 2. SET YOURSELF AS ADMIN (run AFTER signing up once) ──
-update profiles set role='admin' where email='dmnsolutions63@gmail.com';
-
--- ── 3. OTHER TABLES ──
-create table if not exists feedback(id uuid default gen_random_uuid() primary key,user_id uuid,user_email text,user_name text,rating int check(rating between 1 and 5),service text,comment text,created_at timestamptz default now());
-create table if not exists portfolio(id uuid default gen_random_uuid() primary key,title text not null,description text,url text,image text,tags text,category text default 'business',featured boolean default false,sort_order int default 0,created_at timestamptz default now());
-create table if not exists badges(id uuid default gen_random_uuid() primary key,user_email text not null,badge_key text,badge_label text,badge_icon text,awarded_by text,created_at timestamptz default now());
-create table if not exists requests(id uuid default gen_random_uuid() primary key,user_id uuid,user_email text,user_name text,title text,description text,service text,status text default 'open',admin_reply text,created_at timestamptz default now());
-create table if not exists comments(id uuid default gen_random_uuid() primary key,user_id uuid,user_email text,user_name text,type text default 'comment',message text,created_at timestamptz default now());
-alter table feedback enable row level security;
-alter table portfolio enable row level security;
-alter table badges enable row level security;
-alter table requests enable row level security;
-alter table comments enable row level security;
-create policy "pub_read_fb" on feedback for select using(true);
-create policy "auth_ins_fb" on feedback for insert with check(auth.uid()=user_id);
-create policy "admin_del_fb" on feedback for delete using(exists(select 1 from profiles where user_id=auth.uid() and role='admin'));
-create policy "pub_read_pf" on portfolio for select using(true);
-create policy "admin_all_pf" on portfolio for all using(exists(select 1 from profiles where user_id=auth.uid() and role='admin')) with check(exists(select 1 from profiles where user_id=auth.uid() and role='admin'));
-create policy "pub_read_badges" on badges for select using(true);
-create policy "admin_all_badges" on badges for all using(exists(select 1 from profiles where user_id=auth.uid() and role='admin')) with check(exists(select 1 from profiles where user_id=auth.uid() and role='admin'));
-create policy "own_read_req" on requests for select using(auth.uid()=user_id or exists(select 1 from profiles where user_id=auth.uid() and role='admin'));
-create policy "auth_ins_req" on requests for insert with check(auth.uid()=user_id);
-create policy "admin_upd_req" on requests for update using(exists(select 1 from profiles where user_id=auth.uid() and role='admin'));
-create policy "own_read_com" on comments for select using(auth.uid()=user_id or exists(select 1 from profiles where user_id=auth.uid() and role='admin'));
-create policy "auth_ins_com" on comments for insert with check(auth.uid()=user_id);</div>
-                <button class="step-action-btn" style="background:var(--electric);color:white;margin-top:14px"
-                    onclick="copySetupSQL()">
-                    <i class="fas fa-copy"></i> Copy Full SQL
-                </button>
-                <a class="step-action-btn" style="background:var(--surface2);color:var(--text2);margin-top:14px;margin-left:6px"
-                    href="https://supabase.com/dashboard/project/eogezhtvaoabtvsiidth/sql" target="_blank">
-                    <i class="fas fa-external-link-alt"></i> Open Supabase
-                </a>
-            </div>
-
-            <!-- Step 2: Google OAuth -->
-            <div class="step-card fade-up" data-num="2">
-                <div class="step-icon" style="background:rgba(66,133,244,0.1);color:#4285F4">
-                    <i class="fab fa-google"></i>
-                </div>
-                <h3>Enable Google Sign-In</h3>
-                <p>Takes about 5 minutes. This lets your members register with one click using their Google account instead of typing a password.</p>
-                <ol style="font-size:0.81rem;color:var(--text2);line-height:2;padding-left:18px;margin-bottom:14px;">
-                    <li>Go to <strong>console.cloud.google.com</strong> → New project</li>
-                    <li>APIs & Services → Credentials → <strong>Create OAuth 2.0 Client ID</strong></li>
-                    <li>Type: <strong>Web Application</strong></li>
-                    <li>Redirect URI: <code style="background:var(--surface2);padding:1px 6px;border-radius:4px;font-size:0.75rem">https://eogezhtvaoabtvsiidth.supabase.co/auth/v1/callback</code></li>
-                    <li>Copy <strong>Client ID</strong> + <strong>Secret</strong></li>
-                    <li>Supabase → <strong>Auth → Providers → Google</strong> → paste & enable</li>
-                </ol>
-                <a class="step-action-btn" style="background:#4285F4;color:white"
-                    href="https://console.cloud.google.com/apis/credentials" target="_blank">
-                    <i class="fab fa-google"></i> Google Console
-                </a>
-                <a class="step-action-btn" style="background:var(--surface2);color:var(--text2);margin-left:6px"
-                    href="https://supabase.com/dashboard/project/eogezhtvaoabtvsiidth/auth/providers" target="_blank">
-                    <i class="fas fa-key"></i> Supabase Auth
-                </a>
-            </div>
-
-            <!-- Step 3: Admin Access -->
-            <div class="step-card fade-up" data-num="3">
-                <div class="step-icon" style="background:rgba(245,158,11,0.1);color:#f59e0b">
-                    <i class="fas fa-crown"></i>
-                </div>
-                <h3>Access Your Admin Panel</h3>
-                <p>Sign up first, then run the SQL <code style="background:var(--surface2);padding:1px 5px;border-radius:4px;font-size:0.78rem">update profiles set role='admin'</code> in Supabase. Your role is stored in the database, not hardcoded.</p>
-                <ul style="font-size:0.81rem;color:var(--text2);line-height:2;padding-left:18px;margin-bottom:14px;">
-                    <li>📊 View + delete all reviews</li>
-                    <li>🖼️ Add / edit / delete portfolio projects</li>
-                    <li>👥 See all registered members</li>
-                    <li>🏅 Award badges to members</li>
-                    <li>📋 See member requests + reply</li>
-                    <li>💬 View all comments & complaints</li>
-                </ul>
-                <button class="step-action-btn" style="background:linear-gradient(135deg,#f59e0b,#ef4444);color:white"
-                    onclick="openAuthModal('login')">
-                    <i class="fas fa-sign-in-alt"></i> Sign In as Admin
-                </button>
-            </div>
-
         </div>
     </div>
 </section>
@@ -4028,12 +3861,6 @@ async function deletePfItem(id){
     const {error}=await db.from('portfolio').delete().eq('id',id);
     if(error){showToast('Error: '+error.message);return;}
     showToast('Project deleted.');loadAdminPortfolio();loadPortfolioFromDB();
-}
-
-/* ── Copy Setup SQL ─────────────────────────────────────────────────────────── */
-function copySetupSQL(){
-    const sql=document.querySelector('.step-sql-block')?.textContent||'';
-    navigator.clipboard.writeText(sql).then(()=>showToast('SQL copied to clipboard!'));
 }
 
 /* ── Init ────────────────────────────────────────────────────────────────── */
