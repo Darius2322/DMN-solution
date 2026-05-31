@@ -853,92 +853,165 @@
 
 
     /* ── Profile Modal ─────────────────────────────────────────────────────── */
+    /* ── Profile Modal ─────────────────────────────────────────────────────── */
     #profileModal {
-        position:fixed;inset:0;z-index:9995;background:var(--surface);
-        overflow-y:auto;display:none;height:100%;width:100%;
+        position:fixed;inset:0;z-index:9995;background:#0d0d14;
+        display:none;flex-direction:column;
     }
-    #profileModal.open{display:block;}
-    .profile-header-band {
-        background:linear-gradient(135deg,var(--electric) 0%,var(--neon) 100%);
-        padding:0 0 60px;position:relative;overflow:hidden;
+    #profileModal.open{display:flex;}
+    .profile-layout{display:flex;flex:1;overflow:hidden;position:relative;}
+    /* ── Sidebar ── */
+    .profile-sidebar{
+        width:240px;flex-shrink:0;
+        background:#13131e;
+        border-right:1px solid rgba(255,255,255,0.07);
+        display:flex;flex-direction:column;
+        height:100%;overflow-y:auto;
+        transition:transform 0.28s cubic-bezier(0.4,0,0.2,1);
+        flex-shrink:0;
     }
-    .profile-header-band::after{
-        content:'';position:absolute;bottom:-1px;left:0;right:0;height:60px;
-        background:var(--surface);clip-path:ellipse(55% 100% at 50% 100%);
+    @media(max-width:768px){
+        .profile-sidebar{
+            position:absolute;left:0;top:0;bottom:0;width:280px;z-index:50;
+            transform:translateX(-100%);
+            box-shadow:4px 0 24px rgba(0,0,0,0.5);
+        }
+        .profile-sidebar.open{transform:translateX(0);}
+        .profile-sidebar-overlay{
+            display:none;position:absolute;inset:0;background:rgba(0,0,0,0.5);z-index:49;
+        }
+        .profile-sidebar-overlay.open{display:block;}
     }
-    .profile-header-inner{
-        max-width:900px;margin:0 auto;padding:24px 28px 0;
-        display:flex;align-items:center;justify-content:space-between;
+    .profile-main{flex:1;overflow-y:auto;background:#0d0d14;}
+    /* ── Sidebar top bar ── */
+    .profile-topbar{
+        background:linear-gradient(90deg,#2563eb,#06b6d4);
+        padding:13px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;
     }
-    .profile-avatar-wrap{
-        display:flex;align-items:flex-end;gap:20px;padding:0 28px 16px;
-        max-width:900px;margin:0 auto;
+    .profile-topbar-hamburger{
+        background:rgba(255,255,255,0.2);border:none;color:#fff;
+        width:36px;height:36px;border-radius:10px;cursor:pointer;
+        display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;
     }
-    .profile-avatar{
-        width:96px;height:96px;border-radius:50%;
-        background:linear-gradient(135deg,white 0%,rgba(255,255,255,0.7) 100%);
+    .profile-topbar-title{color:#fff;font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;flex:1;}
+    .profile-topbar-back{
+        background:rgba(255,255,255,0.18);border:none;color:#fff;
+        padding:6px 13px;border-radius:10px;cursor:pointer;font-size:0.78rem;
+        font-family:'Syne',sans-serif;font-weight:600;white-space:nowrap;flex-shrink:0;
+        display:flex;align-items:center;gap:5px;
+    }
+    /* ── Sidebar user card ── */
+    .profile-sidebar-user{
+        background:linear-gradient(135deg,#2563eb,#06b6d4);
+        padding:22px 16px 18px;text-align:center;flex-shrink:0;
+    }
+    .profile-sidebar-avatar{
+        width:66px;height:66px;border-radius:50%;
+        background:rgba(255,255,255,0.22);border:3px solid rgba(255,255,255,0.5);
         display:flex;align-items:center;justify-content:center;
-        font-family:'Syne',sans-serif;font-weight:900;font-size:2.4rem;
-        color:var(--electric);border:4px solid white;
-        box-shadow:0 8px 24px rgba(0,0,0,0.15);flex-shrink:0;
-        position:relative;z-index:2;
+        font-family:'Syne',sans-serif;font-weight:900;font-size:1.6rem;
+        color:#fff;margin:0 auto 10px;
     }
-    .profile-name-block{color:white;padding-bottom:8px;}
-    .profile-name-block h2{font-size:1.5rem;font-weight:800;margin-bottom:2px;}
-    .profile-name-block .profile-email{font-size:0.82rem;opacity:0.8;}
-    .profile-badges-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
-    .profile-content{max-width:900px;margin:0 auto;padding:32px 28px 60px;}
+    .profile-sidebar-name{color:#fff;font-weight:800;font-size:0.93rem;font-family:'Syne',sans-serif;}
+    .profile-sidebar-email{color:rgba(255,255,255,0.7);font-size:0.72rem;margin-top:3px;word-break:break-all;}
+    .profile-sidebar-badges{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin-top:10px;}
+    /* ── Sidebar nav ── */
+    .profile-nav{
+        padding:8px 8px 20px;
+        display:flex;flex-direction:column;
+        gap:2px;
+    }
+    .profile-nav-item{
+        display:flex !important;align-items:center !important;gap:10px !important;
+        padding:10px 13px !important;border-radius:9px !important;
+        border:none !important;background:transparent !important;
+        width:100% !important;font-family:'Syne',sans-serif !important;
+        font-size:0.84rem !important;font-weight:600 !important;
+        color:#b0b0c8 !important;cursor:pointer !important;
+        text-align:left !important;transition:all 0.15s !important;
+        line-height:1.3 !important;
+    }
+    .profile-nav-item:hover{background:rgba(255,255,255,0.07) !important;color:#e0e0f0 !important;}
+    .profile-nav-item.active{background:rgba(37,99,235,0.18) !important;color:#60a5fa !important;}
+    .profile-nav-item i{width:16px;text-align:center;font-size:0.88rem;opacity:0.9;flex-shrink:0;}
+    .profile-nav-badge{
+        margin-left:auto;background:#f43f5e;color:#fff;
+        font-size:0.63rem;padding:1px 6px;border-radius:10px;font-weight:700;
+    }
+    .profile-nav-sep{height:1px;background:rgba(255,255,255,0.07);margin:5px 8px;}
+    .profile-nav-logout{color:#f87171 !important;}
+    .profile-nav-logout:hover{background:rgba(244,63,94,0.1) !important;}
+    /* ── Profile stats ── */
     .profile-stats-row{
-        display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:32px;
+        display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
+        margin-bottom:24px;
     }
-    @media(max-width:600px){.profile-stats-row{grid-template-columns:repeat(3,1fr);}}
     .profile-stat{
-        background:var(--card);border:1px solid var(--border);border-radius:16px;
-        padding:18px;text-align:center;
+        background:var(--card);border:1px solid var(--border);border-radius:14px;
+        padding:16px;text-align:center;
     }
     .profile-stat-num{
-        font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:var(--text);
+        font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:var(--text);
     }
-    .profile-stat-label{font-size:0.75rem;color:var(--text3);margin-top:2px;}
-    .profile-tabs{display:flex;gap:4px;background:var(--surface2);border-radius:12px;
-        padding:4px;margin-bottom:24px;overflow-x:auto;}
-    .profile-tab{padding:8px 18px;border-radius:9px;border:none;background:none;
-        font-family:'Syne',sans-serif;font-size:0.83rem;font-weight:600;
-        color:var(--text2);cursor:pointer;transition:all 0.2s;white-space:nowrap;}
-    .profile-tab.active{background:var(--card);color:var(--electric);box-shadow:var(--shadow-sm);}
+    .profile-stat-label{font-size:0.72rem;color:var(--text3);margin-top:2px;}
+    /* ── Profile content area ── */
+    .profile-content{padding:24px 20px 60px;max-width:860px;margin:0 auto;}
     .profile-panel{display:none;}
     .profile-panel.active{display:block;}
+    .profile-section-title{
+        font-family:'Syne',sans-serif;font-weight:800;font-size:1.05rem;
+        margin-bottom:18px;display:flex;align-items:center;gap:8px;
+    }
     .profile-card{
-        background:var(--card);border:1px solid var(--border);border-radius:16px;
-        padding:22px;margin-bottom:14px;
+        background:var(--card);border:1px solid var(--border);border-radius:14px;
+        padding:18px;margin-bottom:12px;
     }
     .profile-card-header{
-        display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;
+        display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px;
     }
-    .profile-card-header h4{font-size:0.9rem;font-weight:700;}
+    .profile-card-header h4{font-size:0.88rem;font-weight:700;}
     .profile-empty{
-        text-align:center;padding:48px 20px;color:var(--text3);
-        background:var(--card);border:1px dashed var(--border);border-radius:16px;
+        text-align:center;padding:40px 20px;color:var(--text3);
+        background:var(--card);border:1px dashed var(--border);border-radius:14px;
     }
-    .profile-empty i{font-size:2rem;display:block;margin-bottom:10px;opacity:0.3;}
+    .profile-empty i{font-size:1.8rem;display:block;margin-bottom:10px;opacity:0.3;}
     .req-form{
-        background:var(--card);border:1px solid var(--border);border-radius:16px;
-        padding:22px;margin-bottom:20px;
+        background:var(--card);border:1px solid var(--border);border-radius:14px;
+        padding:20px;margin-bottom:18px;
     }
-    .req-form h4{font-size:0.95rem;font-weight:700;margin-bottom:14px;}
+    .req-form h4{font-size:0.92rem;font-weight:700;margin-bottom:12px;}
     .status-pill{
-        padding:3px 10px;border-radius:20px;font-size:0.72rem;font-weight:700;
-        font-family:'Syne',sans-serif;
+        padding:3px 10px;border-radius:20px;font-size:0.72rem;font-weight:700;font-family:'Syne',sans-serif;
     }
     .status-open{background:rgba(245,158,11,0.12);color:#f59e0b;}
     .status-in-progress{background:rgba(37,99,235,0.12);color:var(--electric);}
     .status-resolved{background:rgba(16,185,129,0.12);color:var(--green);}
     .status-closed{background:rgba(156,163,175,0.12);color:var(--text3);}
+    .profile-delete-btn{
+        background:none;border:1px solid rgba(244,63,94,0.3);color:var(--rose);
+        padding:3px 9px;border-radius:7px;font-size:0.72rem;cursor:pointer;
+        font-family:'Syne',sans-serif;font-weight:600;transition:all 0.2s;
+    }
+    .profile-delete-btn:hover{background:rgba(244,63,94,0.08);}
+    /* ── Guest fields ── */
+    .guest-fields{
+        display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;
+    }
+    @media(max-width:480px){.guest-fields{grid-template-columns:1fr;}}
+    .guest-fields input{
+        padding:9px 12px;border-radius:10px;border:1.5px solid var(--border);
+        background:var(--surface2);color:var(--text);font-size:0.84rem;
+        font-family:inherit;outline:none;transition:border-color 0.2s;
+    }
+    .guest-fields input:focus{border-color:var(--electric);}
+
+    /* ── Profile joined badge ── */
     .profile-joined-badge{
         background:rgba(255,255,255,0.18);color:white;
         border-radius:8px;padding:5px 12px;font-size:0.75rem;font-weight:600;
         display:inline-flex;align-items:center;gap:6px;
     }
+
 
     /* ── Badge Chips ────────────────────────────────────────────────────────── */
     .badge-chip{
@@ -1001,6 +1074,122 @@
     .ct-suggestion{background:rgba(245,158,11,0.1);color:#f59e0b;}
 
     /* ── 3-Steps Setup ─────────────────────────────────────────────────────── */
+    /* ── Forgot password link ─────────────────────────────────────────────── */
+    .forgot-link{text-align:right;margin-top:-6px;margin-bottom:10px;}
+    .forgot-link button{background:none;border:none;color:var(--electric);font-size:0.8rem;cursor:pointer;padding:0;font-family:'Syne',sans-serif;}
+    .forgot-link button:hover{text-decoration:underline;}
+    #forgotForm{display:none;}
+
+    /* ── Notification items ────────────────────────────────────────────────── */
+    .notif-item{
+        display:flex;gap:12px;padding:13px 14px;border-radius:12px;
+        background:var(--card);border:1px solid var(--border);margin-bottom:8px;
+        transition:background 0.2s;position:relative;
+    }
+    .notif-item.unread{border-left:3px solid var(--electric);background:rgba(37,99,235,0.05);}
+    .notif-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;
+        justify-content:center;font-size:1rem;flex-shrink:0;}
+    .notif-icon.info{background:rgba(37,99,235,0.12);color:var(--electric);}
+    .notif-icon.success{background:rgba(16,185,129,0.12);color:var(--green);}
+    .notif-icon.warning{background:rgba(245,158,11,0.12);color:#f59e0b;}
+    .notif-icon.reply{background:rgba(37,99,235,0.12);color:var(--electric);}
+    .notif-icon.badge{background:rgba(245,158,11,0.12);color:#f59e0b;}
+    .notif-title{font-size:0.85rem;font-weight:700;color:var(--text);margin-bottom:3px;}
+    .notif-msg{font-size:0.78rem;color:var(--text2);line-height:1.5;}
+    .notif-time{font-size:0.72rem;color:var(--text3);margin-top:4px;}
+    .notif-unread-dot{width:8px;height:8px;border-radius:50%;background:var(--electric);
+        position:absolute;top:13px;right:13px;}
+    .notif-mark-btn{background:none;border:1px solid var(--border);color:var(--text3);
+        font-size:0.72rem;padding:3px 8px;border-radius:6px;cursor:pointer;margin-top:6px;}
+    .notif-mark-btn:hover{background:var(--surface2);}
+    .notif-badge-chip{display:inline-flex;align-items:center;gap:3px;background:rgba(37,99,235,0.1);
+        color:var(--electric);padding:2px 8px;border-radius:20px;font-size:0.72rem;font-weight:600;margin-left:4px;}
+
+    /* ── Activity log items ────────────────────────────────────────────────── */
+    .activity-item{
+        display:flex;align-items:flex-start;gap:10px;padding:10px 0;
+        border-bottom:1px solid var(--border);
+    }
+    .activity-item:last-child{border-bottom:none;}
+    .activity-dot{width:8px;height:8px;border-radius:50%;background:var(--electric);
+        flex-shrink:0;margin-top:6px;}
+    .activity-text{font-size:0.82rem;color:var(--text2);line-height:1.5;}
+    .activity-text strong{color:var(--text);}
+    .activity-time{font-size:0.72rem;color:var(--text3);margin-top:2px;}
+    .last-seen-badge{
+        display:inline-flex;align-items:center;gap:6px;background:rgba(16,185,129,0.1);
+        color:var(--green);padding:4px 10px;border-radius:20px;font-size:0.78rem;font-weight:600;
+        margin-bottom:14px;
+    }
+
+    /* ── Admin services panel ──────────────────────────────────────────────── */
+    .admin-svc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;}
+    .admin-svc-card{
+        background:var(--card);border:1px solid var(--border);border-radius:14px;
+        padding:18px;display:flex;flex-direction:column;gap:8px;
+    }
+    .admin-svc-icon{width:40px;height:40px;border-radius:10px;background:rgba(37,99,235,0.1);
+        color:var(--electric);display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
+    .admin-svc-card h4{font-size:0.92rem;font-weight:800;margin:0;}
+    .admin-svc-card p{font-size:0.78rem;color:var(--text2);line-height:1.55;flex:1;}
+    .admin-svc-price{font-size:0.78rem;font-weight:700;color:var(--green);}
+    .admin-svc-inactive{opacity:0.5;border-style:dashed;}
+    .add-svc-btn{
+        border:2px dashed var(--border);border-radius:14px;padding:30px 20px;
+        display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+        color:var(--text3);font-size:0.85rem;cursor:pointer;background:none;
+        transition:all 0.2s;font-family:'Syne',sans-serif;
+    }
+    .add-svc-btn:hover{border-color:var(--electric);color:var(--electric);background:rgba(37,99,235,0.04);}
+    .add-svc-btn i{font-size:1.4rem;}
+
+    /* ── Svc edit modal ──────────────────────────────────────────────────────── */
+    .svc-modal-overlay{
+        position:fixed;inset:0;background:rgba(0,0,0,0.55);backdrop-filter:blur(4px);
+        z-index:10000;display:flex;align-items:center;justify-content:center;padding:20px;
+        opacity:0;pointer-events:none;transition:opacity 0.2s;
+    }
+    .svc-modal-overlay.open{opacity:1;pointer-events:all;}
+    .svc-modal-box{
+        background:var(--card);border-radius:20px;width:100%;max-width:480px;
+        max-height:90vh;overflow-y:auto;box-shadow:var(--shadow-lg);
+    }
+    .svc-modal-header{
+        display:flex;align-items:center;justify-content:space-between;
+        padding:20px 24px 16px;border-bottom:1px solid var(--border);
+    }
+    .svc-modal-header h3{font-size:1.05rem;font-weight:800;margin:0;}
+    .svc-modal-body{padding:20px 24px 24px;}
+    .svc-field{margin-bottom:14px;}
+    .svc-field label{display:block;font-size:0.8rem;font-weight:600;margin-bottom:6px;color:var(--text2);}
+    .svc-field input,.svc-field textarea,.svc-field select{
+        width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--border);
+        background:var(--surface2);color:var(--text);font-size:0.85rem;font-family:inherit;
+        outline:none;transition:border-color 0.2s;box-sizing:border-box;
+    }
+    .svc-field textarea{min-height:80px;resize:vertical;}
+    .svc-field input:focus,.svc-field textarea:focus,.svc-field select:focus{border-color:var(--electric);}
+
+    /* ── Admin user action buttons ──────────────────────────────────────────── */
+    .user-action-btn{
+        display:inline-flex;align-items:center;gap:4px;padding:4px 9px;border-radius:7px;
+        font-size:0.72rem;font-weight:700;cursor:pointer;border:none;font-family:'Syne',sans-serif;
+        transition:opacity 0.2s;margin:2px;
+    }
+    .user-action-btn:hover{opacity:0.8;}
+    .user-action-reset{background:rgba(37,99,235,0.12);color:var(--electric);}
+    .user-action-deactivate{background:rgba(245,158,11,0.12);color:#f59e0b;}
+    .user-action-activate{background:rgba(16,185,129,0.12);color:var(--green);}
+    .user-action-remove{background:rgba(244,63,94,0.1);color:var(--rose);}
+    .user-role-badge{
+        display:inline-block;padding:2px 8px;border-radius:20px;font-size:0.7rem;font-weight:700;
+    }
+    .role-admin{background:rgba(37,99,235,0.15);color:var(--electric);}
+    .role-member{background:rgba(16,185,129,0.1);color:var(--green);}
+    .role-moderator{background:rgba(245,158,11,0.12);color:#f59e0b;}
+    .user-status-active{color:var(--green);font-size:0.75rem;font-weight:600;}
+    .user-status-inactive{color:var(--rose);font-size:0.75rem;font-weight:600;}
+
     /* ── Password field with eye toggle ──────────────────────────────────── */
     .pw-wrap { position:relative; }
     .pw-wrap input { padding-right:40px !important; }
@@ -1333,7 +1522,7 @@
         background:var(--card);color:var(--text2);font-size:0.8rem;cursor:pointer;
         transition:all 0.2s;font-family:'DM Sans',sans-serif;}
     .admin-filter-btn.active{background:var(--electric);color:white;border-color:var(--electric);}
-    .feedback-table-wrap{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;}
+    .feedback-table-wrap{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow-x:auto;-webkit-overflow-scrolling:touch;}
     .feedback-table{width:100%;border-collapse:collapse;}
     .feedback-table th{
         padding:14px 18px;text-align:left;font-family:'Syne',sans-serif;
@@ -1599,97 +1788,14 @@
             <h2>Services Built for Growth</h2>
             <p>From pixel-perfect UI to production-grade backends, we deliver end-to-end digital solutions.</p>
         </div>
-        <div class="services-grid">
-            <div class="service-card fade-up">
-                <div class="service-icon-wrap"><div class="service-icon"><i class="fas fa-code"></i></div></div>
-                <div class="service-body">
-                    <h3>Web Development</h3>
-                    <p>Custom websites and web applications built with modern frameworks. Fast, secure, and scalable.</p>
-                    <div class="service-body-actions">
-                        <button class="btn btn-wa btn-sm" onclick="openWhatsApp('Web Development')"><i class="fab fa-whatsapp"></i> Request Now</button>
-                        <button class="btn btn-outline btn-sm" onclick="openSvcModal('web')"><i class="fas fa-info-circle"></i> Details</button>
-                    </div>
-                </div>
-            </div>
-            <div class="service-card s2 fade-up">
-                <div class="service-icon-wrap"><div class="service-icon"><i class="fas fa-mobile-alt"></i></div></div>
-                <div class="service-body">
-                    <h3>Mobile App Development</h3>
-                    <p>Native and cross-platform mobile apps for iOS and Android with seamless user experiences.</p>
-                    <div class="service-body-actions">
-                        <button class="btn btn-wa btn-sm" onclick="openWhatsApp('Mobile App Development')"><i class="fab fa-whatsapp"></i> Request Now</button>
-                        <button class="btn btn-outline btn-sm" onclick="openSvcModal('mobile')"><i class="fas fa-info-circle"></i> Details</button>
-                    </div>
-                </div>
-            </div>
-            <div class="service-card s3 fade-up">
-                <div class="service-icon-wrap"><div class="service-icon"><i class="fas fa-shopping-bag"></i></div></div>
-                <div class="service-body">
-                    <h3>E-commerce Solutions</h3>
-                    <p>Full-featured online stores with M-Pesa payment integration and inventory management.</p>
-                    <div class="service-body-actions">
-                        <button class="btn btn-wa btn-sm" onclick="openWhatsApp('E-commerce Solutions')"><i class="fab fa-whatsapp"></i> Request Now</button>
-                        <button class="btn btn-outline btn-sm" onclick="openSvcModal('ecommerce')"><i class="fas fa-info-circle"></i> Details</button>
-                    </div>
-                </div>
-            </div>
-            <div class="service-card s4 fade-up">
-                <div class="service-icon-wrap"><div class="service-icon"><i class="fas fa-chart-line"></i></div></div>
-                <div class="service-body">
-                    <h3>SEO & Digital Marketing</h3>
-                    <p>Boost your online presence and reach more Kenyan customers with data-driven strategies.</p>
-                    <div class="service-body-actions">
-                        <button class="btn btn-wa btn-sm" onclick="openWhatsApp('SEO & Digital Marketing')"><i class="fab fa-whatsapp"></i> Request Now</button>
-                        <button class="btn btn-outline btn-sm" onclick="openSvcModal('seo')"><i class="fas fa-info-circle"></i> Details</button>
-                    </div>
-                </div>
-            </div>
-            <div class="service-card s5 fade-up svc-extra" style="display:none">
-                <div class="service-icon-wrap"><div class="service-icon"><i class="fas fa-paint-brush"></i></div></div>
-                <div class="service-body">
-                    <h3>UI/UX Design</h3>
-                    <p>Intuitive, beautiful interfaces that convert visitors into loyal customers.</p>
-                    <div class="service-body-actions">
-                        <button class="btn btn-wa btn-sm" onclick="openWhatsApp('UI/UX Design')"><i class="fab fa-whatsapp"></i> Request Now</button>
-                        <button class="btn btn-outline btn-sm" onclick="openSvcModal('uiux')"><i class="fas fa-info-circle"></i> Details</button>
-                    </div>
-                </div>
-            </div>
-            <div class="service-card s6 fade-up svc-extra" style="display:none">
-                <div class="service-icon-wrap"><div class="service-icon"><i class="fas fa-server"></i></div></div>
-                <div class="service-body">
-                    <h3>Cloud & SaaS Solutions</h3>
-                    <p>Scalable cloud infrastructure and SaaS platforms built on Supabase and modern tooling.</p>
-                    <div class="service-body-actions">
-                        <button class="btn btn-wa btn-sm" onclick="openWhatsApp('Cloud Solutions')"><i class="fab fa-whatsapp"></i> Request Now</button>
-                        <button class="btn btn-outline btn-sm" onclick="openSvcModal('cloud')"><i class="fas fa-info-circle"></i> Details</button>
-                    </div>
-                </div>
-            </div>
-            <div class="service-card s7 fade-up svc-extra" style="display:none">
-                <div class="service-icon-wrap"><div class="service-icon"><i class="fas fa-wifi"></i></div></div>
-                <div class="service-body">
-                    <h3>WiFi & Scifi Networks</h3>
-                    <p>Professional wireless network setup, hotspot management, and fibre connectivity solutions for homes and businesses across Nairobi.</p>
-                    <div class="service-body-actions">
-                        <button class="btn btn-wa btn-sm" onclick="openWhatsApp('WiFi & Scifi Networks')"><i class="fab fa-whatsapp"></i> Request Now</button>
-                        <button class="btn btn-outline btn-sm" onclick="openSvcModal('wifi')"><i class="fas fa-info-circle"></i> Details</button>
-                    </div>
-                </div>
-            </div>
-            <div class="service-card s8 fade-up svc-extra" style="display:none">
-                <div class="service-icon-wrap"><div class="service-icon"><i class="fas fa-bolt"></i></div></div>
-                <div class="service-body">
-                    <h3>Electrical Services</h3>
-                    <p>Licensed electrical installations, wiring, panel upgrades, and maintenance for residential and commercial properties in Kenya.</p>
-                    <div class="service-body-actions">
-                        <button class="btn btn-wa btn-sm" onclick="openWhatsApp('Electrical Services')"><i class="fab fa-whatsapp"></i> Request Now</button>
-                        <button class="btn btn-outline btn-sm" onclick="openSvcModal('electrical')"><i class="fas fa-info-circle"></i> Details</button>
-                    </div>
-                </div>
-            </div>
+        <div class="services-grid" id="publicServicesGrid">
+            <!-- Loaded from DB by loadPublicServices(); falls back to defaults if table empty -->
+            <div class="service-card fade-up visible" style="opacity:1"><div class="service-icon-wrap"><div class="service-icon"><i class="fas fa-code"></i></div></div><div class="service-body"><h3>Web Development</h3><p>Custom websites and web applications built with modern frameworks. Fast, secure, and scalable.</p><div class="service-body-actions"><button class="btn btn-wa btn-sm" onclick="openWhatsApp('Web Development')"><i class="fab fa-whatsapp"></i> Request Now</button></div></div></div>
+            <div class="service-card s2 fade-up visible" style="opacity:1"><div class="service-icon-wrap"><div class="service-icon"><i class="fas fa-mobile-alt"></i></div></div><div class="service-body"><h3>Mobile App Development</h3><p>Native and cross-platform mobile apps for iOS and Android with seamless user experiences.</p><div class="service-body-actions"><button class="btn btn-wa btn-sm" onclick="openWhatsApp('Mobile App Development')"><i class="fab fa-whatsapp"></i> Request Now</button></div></div></div>
+            <div class="service-card s3 fade-up visible" style="opacity:1"><div class="service-icon-wrap"><div class="service-icon"><i class="fas fa-shopping-bag"></i></div></div><div class="service-body"><h3>E-commerce Solutions</h3><p>Full-featured online stores with M-Pesa payment integration and inventory management.</p><div class="service-body-actions"><button class="btn btn-wa btn-sm" onclick="openWhatsApp('E-commerce Solutions')"><i class="fab fa-whatsapp"></i> Request Now</button></div></div></div>
+            <div class="service-card s4 fade-up visible" style="opacity:1"><div class="service-icon-wrap"><div class="service-icon"><i class="fas fa-chart-line"></i></div></div><div class="service-body"><h3>SEO & Digital Marketing</h3><p>Boost your online presence and reach more Kenyan customers with data-driven strategies.</p><div class="service-body-actions"><button class="btn btn-wa btn-sm" onclick="openWhatsApp('SEO & Digital Marketing')"><i class="fab fa-whatsapp"></i> Request Now</button></div></div></div>
         </div>
-        <div class="view-more-wrap">
+        <div class="view-more-wrap" id="viewMoreServicesWrap" style="display:none">
             <button class="btn btn-outline" id="viewMoreServicesBtn" onclick="toggleServices()">
                 View More Services <i class="fas fa-chevron-down"></i>
             </button>
@@ -2077,15 +2183,12 @@
                 <div class="feedback-form-card fade-up" id="feedbackFormCard">
                     <h3>Rate Our Service</h3>
                     <p class="sub">Tell us about your experience with DMN Solutions.</p>
-                    <div id="feedbackLoginPrompt" class="feedback-login-prompt" style="display:none">
-                        <i class="fas fa-lock"></i>
-                        <strong>Sign in to leave a review</strong>
-                        <p style="margin-top:8px;font-size:0.82rem;">Create a free account to share your experience.</p>
-                        <button class="btn btn-primary" style="margin-top:16px" onclick="openAuthModal()">
-                            <i class="fas fa-user"></i> Sign In / Register
-                        </button>
-                    </div>
                     <div id="feedbackFormInner">
+                        <!-- Guest name/email — hidden when logged in -->
+                        <div id="guestReviewFields" class="guest-fields" style="display:none">
+                            <input type="text" id="guestReviewName" placeholder="Your name *">
+                            <input type="email" id="guestReviewEmail" placeholder="Your email (optional)">
+                        </div>
                         <div class="stars-row" id="starsRow">
                             <button class="star-btn" data-val="1">★</button>
                             <button class="star-btn" data-val="2">★</button>
@@ -2237,7 +2340,7 @@
 
 <script>
 // ─── Portfolio Data ───────────────────────────────────────────────────────────
-const portfolioData = [
+let portfolioData = [
     {
         title: "DMN Solution",
         url: "https://dmn-solution.vercel.app/",
@@ -2748,10 +2851,11 @@ function addNotif(icon, title, desc) {
 }
 function timeAgo(iso) {
     const diff = Math.floor((Date.now() - new Date(iso)) / 1000);
-    if (diff < 60) return 'Just now';
+    if (diff < 60) return 'just now';
     if (diff < 3600) return Math.floor(diff/60) + ' min ago';
     if (diff < 86400) return Math.floor(diff/3600) + ' hr ago';
-    return Math.floor(diff/86400) + ' day(s) ago';
+    if (diff < 604800) return Math.floor(diff/86400) + ' day(s) ago';
+    return new Date(iso).toLocaleDateString('en-KE',{month:'short',day:'numeric',year:'numeric'});
 }
 function renderNotifs() {
     const arr = loadNotifs();
@@ -2896,6 +3000,7 @@ document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
                         <button type="button" class="pw-eye" onclick="togglePw('loginPassword',this)" tabindex="-1"><i class="fas fa-eye"></i></button>
                     </div>
                 </div>
+                <div class="forgot-link"><button onclick="switchAuthTab('forgot')">Forgot password?</button></div>
                 <button class="auth-submit" id="loginSubmitBtn" onclick="doLogin()">
                     <i class="fas fa-sign-in-alt"></i> Sign In
                 </button>
@@ -2941,11 +3046,23 @@ document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
                     <i class="fab fa-google" style="color:#4285F4"></i> Continue with Google
                 </button>
             </div>
+            <!-- Forgot password form -->
+            <div id="forgotForm">
+                <p style="font-size:0.83rem;color:var(--text2);margin-bottom:16px;line-height:1.6">Enter your email and we'll send you a reset link.</p>
+                <div class="auth-field">
+                    <label>Email Address</label>
+                    <input type="email" id="forgotEmail" placeholder="you@example.com" autocomplete="email">
+                </div>
+                <button class="auth-submit" id="forgotSubmitBtn" onclick="doForgotPassword()">
+                    <i class="fas fa-paper-plane"></i> Send Reset Link
+                </button>
+                <div style="text-align:center;margin-top:14px">
+                    <button onclick="switchAuthTab('login')" style="background:none;border:none;color:var(--electric);font-size:0.82rem;cursor:pointer;font-family:'Syne',sans-serif;">← Back to Sign In</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
-<!-- ─── ADMIN DASHBOARD ─── -->
 <div id="adminDashboard">
     <div class="admin-header">
         <div class="admin-header-inner">
@@ -3001,6 +3118,7 @@ document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
         <div class="admin-tab-nav" style="flex-wrap:wrap">
             <button class="admin-tab-btn active" onclick="switchAdminTab('reviews')">📊 Reviews</button>
             <button class="admin-tab-btn" onclick="switchAdminTab('portfolio')">🖼️ Portfolio</button>
+            <button class="admin-tab-btn" onclick="switchAdminTab('services-admin')">🛠️ Services</button>
             <button class="admin-tab-btn" onclick="switchAdminTab('members')">👥 Members</button>
             <button class="admin-tab-btn" onclick="switchAdminTab('requests-admin')">📋 Requests</button>
             <button class="admin-tab-btn" onclick="switchAdminTab('comments-admin')">💬 Comments</button>
@@ -3048,16 +3166,31 @@ document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
             </div>
         </div>
 
-        <!-- Members Panel -->
+        <!-- Services Panel (admin) -->
+        <div class="admin-panel" id="adminPanel-services-admin">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                <div class="admin-section-title" style="margin-bottom:0"><i class="fas fa-cogs" style="color:var(--electric)"></i> Services</div>
+                <button class="btn btn-primary btn-sm" onclick="openAdminSvcModal()"><i class="fas fa-plus"></i> Add Service</button>
+            </div>
+            <p style="font-size:0.82rem;color:var(--text2);margin-bottom:20px;">Manage services shown on the site. Toggle active to show/hide without deleting.</p>
+            <div id="adminServicesGrid" class="admin-svc-grid">
+                <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text3)"><i class="fas fa-spinner fa-spin" style="font-size:1.5rem;display:block;margin-bottom:10px"></i>Loading…</div>
+            </div>
+        </div>
+
         <div class="admin-panel" id="adminPanel-members">
-            <div class="admin-section-title"><i class="fas fa-users" style="color:var(--electric)"></i> Registered Members</div>
-            <div class="feedback-table-wrap members-table-wrap">
-                <table class="feedback-table">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+                <div class="admin-section-title" style="margin-bottom:0"><i class="fas fa-users" style="color:var(--electric)"></i> Registered Members</div>
+                <button class="btn btn-primary btn-sm" onclick="openAddUserModal()"><i class="fas fa-user-plus"></i> Add User</button>
+            </div>
+            <p style="font-size:0.78rem;color:var(--text3);margin-bottom:14px">Swipe left/right to see all columns and actions.</p>
+            <div style="overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:12px;border:1px solid var(--border);">
+                <table class="feedback-table" style="min-width:700px">
                     <thead><tr>
-                        <th>#</th><th>Email</th><th>Name</th><th>Joined</th><th>Badges</th><th>Reviews / Action</th>
+                        <th>#</th><th>Member</th><th>Role</th><th>Status</th><th>Last Seen</th><th>Joined</th><th>Actions</th>
                     </tr></thead>
                     <tbody id="adminMembersBody">
-                        <tr><td colspan="5" class="admin-empty"><i class="fas fa-spinner fa-spin"></i>Loading…</td></tr>
+                        <tr><td colspan="7" class="admin-empty"><i class="fas fa-spinner fa-spin"></i>Loading…</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -3121,6 +3254,7 @@ const BADGE_DEFS = [
 
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON);
+const ADMIN_EMAIL = 'dmnsolutions63@gmail.com';
 
 let currentUser = null, currentUserRole = null, allFeedback = [], selectedRating = 0;
 let adminAllReviews = [], adminAllMembers = [];
@@ -3178,22 +3312,45 @@ function checkPwMatch() {
 
 /* ── Init ──────────────────────────────────────────────────────────────────── */
 async function initAuth() {
-    const { data:{ session } } = await db.auth.getSession();
-    if (session) { currentUser = session.user; await loadUserRole(currentUser.id); await updateHeaderForUser(currentUser); }
-    else updateHeaderForGuest();
+    try {
+        const { data:{ session } } = await db.auth.getSession();
+        if (session) {
+            currentUser = session.user;
+            try { await loadUserRole(session.user.id); } catch(e) { currentUserRole='member'; }
+            try { await updateHeaderForUser(session.user); } catch(e) { updateHeaderForGuest(); }
+        } else {
+            updateHeaderForGuest();
+        }
+    } catch(e) { updateHeaderForGuest(); }
+
     db.auth.onAuthStateChange(async (_e, sess) => {
+        const hadUser = !!currentUser;
         currentUser = sess?.user || null;
-        if (currentUser) { await loadUserRole(currentUser.id); await updateHeaderForUser(currentUser); closeAuthModal(); }
-        else { updateHeaderForGuest(); closeAdminDashboard(); }
-        updateFeedbackForm();
+        if (currentUser && !hadUser) {
+            // Close modal and show avatar IMMEDIATELY — no awaits blocking this
+            closeAuthModal();
+            currentUserRole = 'member';
+            updateHeaderForUser(currentUser).catch(()=>{});
+            try { updateFeedbackForm(); } catch(e) {}
+            // DB work fully in background
+            loadUserRole(currentUser.id)
+                .then(() => updateHeaderForUser(currentUser).catch(()=>{}))
+                .catch(()=>{});
+        } else if (!currentUser) {
+            currentUserRole = null;
+            updateHeaderForGuest();
+            try { closeAdminDashboard(); } catch(e) {}
+            try { updateFeedbackForm(); } catch(e) {}
+        }
     });
-    loadPublicReviews();
-    loadPortfolioFromDB();
-    updateFeedbackForm();
+    try { loadPublicReviews(); } catch(e) {}
+    try { loadPortfolioFromDB(); } catch(e) {}
+    try { loadPublicServices(); } catch(e) {}
+    try { updateFeedbackForm(); } catch(e) {}
 }
 
 async function getUserBadgeChips(email) {
-    const { data } = await db.from('badges').select('*').eq('user_email', email);
+    const data = await dbFetch(db.from('badges').select('*').eq('user_email', email));
     if (!data || !data.length) return '';
     return data.map(b => {
         const def = BADGE_DEFS.find(d => d.key === b.badge_key) || {};
@@ -3204,11 +3361,8 @@ async function getUserBadgeChips(email) {
 async function loadUserRole(userId) {
     try {
         // Try reading existing profile
-        const { data, error } = await db
-            .from('profiles')
-            .select('role, email')
-            .eq('user_id', userId)
-            .maybeSingle();
+        const rows = await dbFetch(db.from('profiles').select('role,email,is_active').eq('user_id', userId).limit(1), null, 6000);
+        const data = rows && rows.length ? rows[0] : null; const error = null;
 
         if (data && data.role) {
             currentUserRole = data.role;
@@ -3232,26 +3386,26 @@ async function loadUserRole(userId) {
 
 async function updateHeaderForUser(user) {
     const wrap = document.getElementById('userMenuWrap');
+    if(!wrap) return;
     const initial = (user.user_metadata?.full_name || user.email || 'U')[0].toUpperCase();
-    const badgeRow = await getUserBadgeChips(user.email);
+    let badgeRow = '';
+    try { badgeRow = await getUserBadgeChips(user.email); } catch(e) {}
+    const adminLinks = (isAdmin() || user.email === ADMIN_EMAIL) ? `
+        <button class="ud-item" onclick="verifyAndOpenAdmin();toggleUserMenu()"><i class="fas fa-tachometer-alt"></i> Admin Dashboard</button>
+        <div class="ud-sep"></div>` : '';
     wrap.innerHTML = `
-        <div class="user-menu-wrap">
-            <button class="user-avatar-btn" id="userAvatarBtn" onclick="toggleUserMenu()">${initial}</button>
-            <div class="user-dropdown" id="userDropdown">
-                <div class="ud-header">
-                    <div class="ud-name">${user.user_metadata?.full_name || 'Member'}</div>
-                    <div class="ud-email">${user.email}</div>
-                    ${badgeRow ? `<div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:4px">${badgeRow}</div>` : ''}
-                </div>
-                ${(isAdmin() || user.email === 'dmnsolutions63@gmail.com') ? `
-                <button class="ud-item" onclick="verifyAndOpenAdmin()"><i class="fas fa-tachometer-alt"></i> Admin Dashboard</button>
-                <button class="ud-item" onclick="document.getElementById('setupModalOverlay').classList.add('open');toggleUserMenu()"><i class="fas fa-cog"></i> Setup Guide</button>
-                <div class="ud-sep"></div>` : ''}
-                <button class="ud-item" onclick="openProfile()"><i class="fas fa-user-circle"></i> My Profile</button>
-                <button class="ud-item" onclick="document.getElementById('feedback').scrollIntoView({behavior:'smooth'});toggleUserMenu()"><i class="fas fa-star"></i> Leave a Review</button>
-                <div class="ud-sep"></div>
-                <button class="ud-item danger" onclick="doLogout()"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
+        <button class="user-avatar-btn" id="userAvatarBtn" onclick="toggleUserMenu()">${initial}</button>
+        <div class="user-dropdown" id="userDropdown">
+            <div class="ud-header">
+                <div class="ud-name">${user.user_metadata?.full_name || 'Member'}</div>
+                <div class="ud-email">${user.email}</div>
+                ${badgeRow ? `<div style="margin-top:6px;display:flex;flex-wrap:wrap;gap:4px">${badgeRow}</div>` : ''}
             </div>
+            ${adminLinks}
+            <button class="ud-item" onclick="openProfile();toggleUserMenu()"><i class="fas fa-user-circle"></i> My Profile</button>
+            <button class="ud-item" onclick="document.getElementById('feedback').scrollIntoView({behavior:'smooth'});toggleUserMenu()"><i class="fas fa-star"></i> Leave a Review</button>
+            <div class="ud-sep"></div>
+            <button class="ud-item danger" onclick="doLogout()"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
         </div>`;
 }
 function updateHeaderForGuest() {
@@ -3277,63 +3431,114 @@ function openAuthModal(tab) {
 function closeAuthModal() { document.getElementById('authModalOverlay').classList.remove('open'); }
 function handleAuthOverlayClick(e) { if(e.target===document.getElementById('authModalOverlay'))closeAuthModal(); }
 function switchAuthTab(tab) {
-    document.getElementById('loginForm').style.display = tab==='login'?'block':'none';
-    document.getElementById('signupForm').style.display = tab==='signup'?'block':'none';
+    document.getElementById('loginForm').style.display  = tab==='login'  ?'block':'none';
+    document.getElementById('signupForm').style.display = tab==='signup' ?'block':'none';
+    document.getElementById('forgotForm').style.display = tab==='forgot' ?'block':'none';
     document.getElementById('loginTabBtn').classList.toggle('active', tab==='login');
     document.getElementById('signupTabBtn').classList.toggle('active', tab==='signup');
-    document.getElementById('authModalTitle').textContent = tab==='login'?'Welcome Back':'Create Account';
-    document.getElementById('authModalSub').textContent = tab==='login'
-        ?'Sign in to your DMN Solutions account':'Join the DMN Solutions community';
+    const titles={login:'Welcome Back',signup:'Create Account',forgot:'Reset Password'};
+    const subs={login:'Sign in to your DMN Solutions account',signup:'Join the DMN Solutions community',forgot:'We will email you a secure reset link'};
+    document.getElementById('authModalTitle').textContent = titles[tab]||'';
+    document.getElementById('authModalSub').textContent   = subs[tab]||'';
     clearAuthMsg();
+}
+async function doForgotPassword() {
+    const email = document.getElementById('forgotEmail').value.trim();
+    if(!email){showAuthMsg('Please enter your email address.','error');return;}
+    const btn = document.getElementById('forgotSubmitBtn');
+    btn.disabled=true; btn.textContent='Sending…';
+    const {error} = await db.auth.resetPasswordForEmail(email, {redirectTo: window.location.href});
+    btn.disabled=false; btn.innerHTML='<i class="fas fa-paper-plane"></i> Send Reset Link';
+    if(error){showAuthMsg(error.message,'error');return;}
+    showAuthMsg('✅ Reset link sent! Check your inbox.','success');
+    document.getElementById('forgotEmail').value='';
+    // Log the event
+    logActivity('forgot_password','',email);
 }
 function showAuthMsg(msg,type){const el=document.getElementById('authMsg');el.textContent=msg;el.className=`auth-msg show ${type}`;}
 function clearAuthMsg(){const el=document.getElementById('authMsg');el.className='auth-msg';el.textContent='';}
 
 async function doLogin() {
-    const email=document.getElementById('loginEmail').value.trim();
-    const pass=document.getElementById('loginPassword').value;
-    if(!email||!pass){showAuthMsg('Please fill in all fields.','error');return;}
-    const btn=document.getElementById('loginSubmitBtn');
-    btn.disabled=true;btn.textContent='Signing in…';
-    const {error}=await db.auth.signInWithPassword({email,password:pass});
-    btn.disabled=false;btn.innerHTML='<i class="fas fa-sign-in-alt"></i> Sign In';
-    if(error){showAuthMsg(error.message,'error');return;}
-    if(email===ADMIN_EMAIL)setTimeout(()=>openAdminDashboard(),400);
+    const email = document.getElementById('loginEmail').value.trim();
+    const pass  = document.getElementById('loginPassword').value;
+    if (!email || !pass) { showAuthMsg('Please fill in all fields.', 'error'); return; }
+    const btn = document.getElementById('loginSubmitBtn');
+    btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in…';
+    try {
+        const signInPromise = db.auth.signInWithPassword({ email, password: pass });
+        const timeout = new Promise((_,rej) => setTimeout(() => rej(new Error('__timeout__')), 15000));
+        let data, error;
+        try {
+            ({ data, error } = await Promise.race([signInPromise, timeout]));
+        } catch(te) {
+            // Timed out — check if auth actually went through
+            const { data: sd } = await db.auth.getSession().catch(() => ({data:null}));
+            if (sd?.session?.user) {
+                data = { user: sd.session.user }; error = null;
+            } else {
+                showAuthMsg('Connection is slow — please try again.', 'error'); return;
+            }
+        }
+        if (error) { showAuthMsg(error.message, 'error'); return; }
+        if (!data?.user) { showAuthMsg('Login failed. Please try again.', 'error'); return; }
+
+        // ── Signed in — close modal immediately ──
+        currentUser = data.user;
+        currentUserRole = 'member';
+        closeAuthModal();
+        updateHeaderForUser(data.user).catch(() => {});
+        showToast('Welcome back! 👋');
+        // Auto-open profile
+        setTimeout(()=>openProfile(), 400);
+        if (email === ADMIN_EMAIL) setTimeout(() => openAdminDashboard(), 400);
+        // Role + activity in background
+        loadUserRole(data.user.id).then(() => updateHeaderForUser(data.user).catch(()=>{})).catch(()=>{});
+        logActivity('login', '', 'Web login');
+    } catch(e) {
+        showAuthMsg(e.message || 'Something went wrong. Check your connection.', 'error');
+    } finally {
+        btn.disabled = false; btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
+    }
 }
 async function doSignup() {
-    const name=document.getElementById('signupName').value.trim();
-    const email=document.getElementById('signupEmail').value.trim();
-    const pass=document.getElementById('signupPassword').value;
-    const confirm=document.getElementById('signupConfirm').value;
+    const name    = document.getElementById('signupName').value.trim();
+    const email   = document.getElementById('signupEmail').value.trim();
+    const pass    = document.getElementById('signupPassword').value;
+    const confirm = document.getElementById('signupConfirm').value;
     if(!name||!email||!pass||!confirm){showAuthMsg('Please fill in all fields.','error');return;}
     if(pass!==confirm){showAuthMsg('Passwords do not match.','error');return;}
     if(pass.length<6){showAuthMsg('Password must be at least 6 characters.','error');return;}
-    const btn=document.getElementById('signupSubmitBtn');
-    btn.disabled=true;btn.textContent='Creating account…';
-    const {error}=await db.auth.signUp({email,password:pass,options:{data:{full_name:name}}});
-    btn.disabled=false;btn.innerHTML='<i class="fas fa-user-plus"></i> Create Account';
-    if(error){showAuthMsg(error.message,'error');return;}
-    showAuthMsg('✅ Account created! Check your email to confirm.','success');
-    // Profile row created automatically by trigger.
-    // If trigger fails, loadUserRole() will upsert it on next login.
+    const btn = document.getElementById('signupSubmitBtn');
+    btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account…';
+    try {
+        const signUpPromise = db.auth.signUp({email, password:pass, options:{data:{full_name:name}}});
+        const timeout = new Promise((_,rej)=>setTimeout(()=>rej(new Error('Request timed out. Check your connection.')),12000));
+        const {error} = await Promise.race([signUpPromise, timeout]);
+        if(error){showAuthMsg(error.message,'error');return;}
+        showAuthMsg('✅ Account created! Check your email to confirm before signing in.','success');
+        logActivity('signup','','New account');
+    } catch(e) {
+        showAuthMsg(e.message||'Something went wrong. Check your connection.','error');
+    } finally {
+        btn.disabled = false; btn.innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
+    }
 }
 async function doGoogleLogin() {
     const {error}=await db.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.href}});
     if(error)showAuthMsg(error.message,'error');
 }
 async function doLogout() {
-    await db.auth.signOut(); closeAdminDashboard(); closeProfile(); updateHeaderForGuest();
-    showToast('Signed out successfully.');
+    try {
+        currentUser = null; currentUserRole = null;
+        updateHeaderForGuest();
+        closeAdminDashboard();
+        try { closeProfile(); } catch(e) {}
+        db.auth.signOut().catch(()=>{});
+        showToast('Signed out successfully.');
+    } catch(e) {}
 }
 
 /* ── Feedback ────────────────────────────────────────────────────────────── */
-function updateFeedbackForm() {
-    const fi=document.getElementById('feedbackFormInner');
-    const lp=document.getElementById('feedbackLoginPrompt');
-    if(!fi||!lp)return;
-    if(currentUser){fi.style.display='block';lp.style.display='none';}
-    else{fi.style.display='none';lp.style.display='block';}
-}
 document.addEventListener('DOMContentLoaded',()=>{
     document.querySelectorAll('.star-btn').forEach(btn=>{
         btn.addEventListener('click',()=>{
@@ -3350,16 +3555,27 @@ document.addEventListener('DOMContentLoaded',()=>{
         document.querySelectorAll('.star-btn').forEach((b,i)=>b.classList.toggle('lit',i<selectedRating));
     });
 });
+function updateFeedbackForm(){
+    const gf=document.getElementById('guestReviewFields');
+    if(gf) gf.style.display = currentUser ? 'none' : 'grid';
+}
 async function submitFeedback() {
-    if(!currentUser){openAuthModal();return;}
     if(!selectedRating){showFbMsg('Please select a star rating.','error');return;}
     const service=document.getElementById('feedbackService').value||'General';
     const comment=document.getElementById('feedbackComment').value.trim();
+    let userId=null, userEmail='', userName='Anonymous';
+    if(currentUser){
+        userId=currentUser.id; userEmail=currentUser.email;
+        userName=currentUser.user_metadata?.full_name||currentUser.email;
+    } else {
+        userName=(document.getElementById('guestReviewName')?.value||'').trim()||'Anonymous';
+        userEmail=(document.getElementById('guestReviewEmail')?.value||'').trim();
+        // No name required — anonymous is fine
+    }
     const btn=document.getElementById('feedbackSubmitBtn');
     btn.disabled=true;btn.textContent='Submitting…';
     const {error}=await db.from('feedback').insert({
-        user_id:currentUser.id, user_email:currentUser.email,
-        user_name:currentUser.user_metadata?.full_name||currentUser.email,
+        user_id:userId, user_email:userEmail, user_name:userName,
         rating:selectedRating, service, comment
     });
     btn.disabled=false;btn.innerHTML='<i class="fas fa-paper-plane"></i> Submit Review';
@@ -3367,18 +3583,64 @@ async function submitFeedback() {
     showFbMsg('✅ Thank you for your review!','success');
     document.getElementById('feedbackComment').value='';
     document.getElementById('feedbackService').value='';
+    if(document.getElementById('guestReviewName'))document.getElementById('guestReviewName').value='';
+    if(document.getElementById('guestReviewEmail'))document.getElementById('guestReviewEmail').value='';
     selectedRating=0;
     document.querySelectorAll('.star-btn').forEach(b=>b.classList.remove('lit'));
+    logActivity('submit_feedback','',service);
     loadPublicReviews();
+}
+async function deleteMyReview(id){
+    if(!confirm('Delete this review?'))return;
+    const {error}=await db.from('feedback').delete().eq('id',id).eq('user_id',currentUser.id);
+    if(error){showToast('Error: '+error.message);return;}
+    showToast('Review deleted.');
+    openProfile();
+    loadPublicReviews();
+}
+async function deleteMyComment(id){
+    if(!confirm('Delete this comment?'))return;
+    const {error}=await db.from('comments').delete().eq('id',id).eq('user_id',currentUser.id);
+    if(error){showToast('Error: '+error.message);return;}
+    showToast('Comment deleted.');
+    openProfile();
 }
 function showFbMsg(msg,type){
     const el=document.getElementById('feedbackMsg');
     el.textContent=msg;el.className=`auth-msg show ${type}`;
     setTimeout(()=>{el.className='auth-msg';},4000);
 }
+/* ── Public Services (loads from DB, falls back to static) ──────────────── */
+async function loadPublicServices(){
+    const grid=document.getElementById('publicServicesGrid');
+    if(!grid)return;
+    const svcs=await dbFetch(db.from('services').select('*').eq('is_active',true).order('sort_order').order('created_at',{ascending:false}));
+    if(!svcs.length){
+        // Make static fallback cards visible (remove fade-up opacity)
+        grid.querySelectorAll('.fade-up').forEach(el=>el.classList.add('visible'));
+        return;
+    }
+    const colors=['','s2','s3','s4','s5','s6','s7','s8'];
+    grid.innerHTML=svcs.map((s,i)=>`
+        <div class="service-card ${colors[i%8]} visible" style="opacity:1">
+            <div class="service-icon-wrap"><div class="service-icon"><i class="${s.icon||'fas fa-cog'}"></i></div></div>
+            <div class="service-body">
+                <h3>${s.title}</h3>
+                <p>${s.description||''}</p>
+                ${s.price_label?`<div style="font-size:0.8rem;font-weight:700;color:var(--green);margin-bottom:10px"><i class="fas fa-tag"></i> ${s.price_label}</div>`:''}
+                ${Array.isArray(s.features)&&s.features.length?`<ul style="font-size:0.8rem;color:var(--text2);padding-left:16px;margin-bottom:10px">${s.features.map(f=>`<li>${f}</li>`).join('')}</ul>`:''}
+                <div class="service-body-actions">
+                    <button class="btn btn-wa btn-sm" onclick="openWhatsApp('${s.title.replace(/'/g,"\\'")}')"><i class="fab fa-whatsapp"></i> Request Now</button>
+                </div>
+            </div>
+        </div>`).join('');
+    const wrap=document.getElementById('viewMoreServicesWrap');
+    if(wrap)wrap.style.display='none';
+}
+
 async function loadPublicReviews() {
-    const {data}=await db.from('feedback').select('*').order('created_at',{ascending:false}).limit(20);
-    allFeedback=data||[];
+    const data=await dbFetch(db.from('feedback').select('*').order('created_at',{ascending:false}).limit(20));
+    allFeedback=data;
     renderPublicReviews(allFeedback);
 }
 function renderPublicReviews(data) {
@@ -3421,15 +3683,17 @@ function renderPublicReviews(data) {
 
 /* ── Portfolio ────────────────────────────────────────────────────────────── */
 async function loadPortfolioFromDB() {
-    const {data}=await db.from('portfolio').select('*').order('sort_order').order('created_at',{ascending:false});
-    if(data&&data.length>0) {
-        portfolioData=data.map(p=>({
+    const data=await dbFetch(db.from('portfolio').select('*').order('sort_order').order('created_at',{ascending:false}));
+    if(data.length>0) {
+        const mapped=data.map(p=>({
             id:p.id, title:p.title, description:p.description||'',
             url:p.url||'#', image:p.image||'',
             tags:typeof p.tags==='string'?p.tags.split(',').map(t=>t.trim()):(p.tags||[]),
             filter:p.category||'business', featured:p.featured||false
         }));
-        if(typeof renderPortfolio==='function')renderPortfolio();
+        // Replace in-place so all references see the update (portfolioData is let but still global)
+        portfolioData.splice(0, portfolioData.length, ...mapped);
+        if(typeof renderPortfolio==='function') renderPortfolio();
     }
 }
 
@@ -3438,43 +3702,51 @@ async function openProfile() {
     if(!currentUser){openAuthModal();return;}
     document.getElementById('profileModal').classList.add('open');
     document.body.style.overflow='hidden';
-    toggleUserMenu();
+    toggleUserMenu && toggleUserMenu();
     const u=currentUser;
     const name=u.user_metadata?.full_name||u.email;
-    document.getElementById('profileAvatar').textContent=name[0].toUpperCase();
+    const initial=name[0].toUpperCase();
+    document.getElementById('profileAvatar').textContent=initial;
     document.getElementById('profileName').textContent=name;
     document.getElementById('profileEmail').textContent=u.email;
     const joined=new Date(u.created_at||Date.now());
     document.getElementById('profileJoinedText').textContent=
-        'Joined '+joined.toLocaleDateString('en-KE',{year:'numeric',month:'long'});
+        'Member since '+joined.toLocaleDateString('en-KE',{year:'numeric',month:'long'});
+    // Update last_seen_at silently
+    db.from('profiles').update({last_seen_at:new Date().toISOString()}).eq('user_id',u.id).then(()=>{}).catch(()=>{});
+    logActivity('view_page','profile','Profile page');
     // Load badges
-    const {data:badges}=await db.from('badges').select('*').eq('user_email',u.email);
+    const badges=await dbFetch(db.from('badges').select('*').eq('user_email',u.email));
     const br=document.getElementById('profileBadgesRow');
-    br.innerHTML=(badges||[]).map(b=>{
+    br.innerHTML=badges.map(b=>{
         const def=BADGE_DEFS.find(d=>d.key===b.badge_key)||{};
-        return `<span class="badge-chip ${def.cls||b.badge_key}">${b.badge_icon||def.icon} ${b.badge_label||def.label}</span>`;
+        return `<span class="badge-chip ${def.cls||b.badge_key}" style="font-size:0.7rem">${b.badge_icon||def.icon} ${b.badge_label||def.label}</span>`;
     }).join('');
-    document.getElementById('pStatBadges').textContent=(badges||[]).length;
+    document.getElementById('pStatBadges').textContent=badges.length;
     // Load reviews
-    const {data:reviews}=await db.from('feedback').select('*').eq('user_id',u.id).order('created_at',{ascending:false});
-    document.getElementById('pStatReviews').textContent=(reviews||[]).length;
+    const reviews=await dbFetch(db.from('feedback').select('*').eq('user_id',u.id).order('created_at',{ascending:false}));
+    document.getElementById('pStatReviews').textContent=reviews.length;
+    document.getElementById('overviewReviews').textContent=reviews.length;
     const rl=document.getElementById('profileReviewsList');
-    if(!reviews||!reviews.length){rl.innerHTML='<div class="profile-empty"><i class="fas fa-star"></i>You have not left any reviews yet.</div>';}
-    else{rl.innerHTML=reviews.map(r=>`
+    rl.innerHTML=reviews.length?reviews.map(r=>`
         <div class="profile-card">
             <div class="profile-card-header">
-                <div style="color:#f59e0b;font-size:1rem">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
-                <span class="fb-service-tag">${r.service||'General'}</span>
+                <div style="display:flex;align-items:center;gap:8px">
+                    <div style="color:#f59e0b">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
+                    <span class="fb-service-tag">${r.service||'General'}</span>
+                </div>
+                <button class="profile-delete-btn" onclick="deleteMyReview('${r.id}')"><i class="fas fa-trash"></i> Delete</button>
             </div>
-            <p style="font-size:0.85rem;color:var(--text2);margin-bottom:6px">${r.comment||'<em style="color:var(--text3)">No comment</em>'}</p>
-            <div style="font-size:0.73rem;color:var(--text3)">${new Date(r.created_at).toLocaleDateString('en-KE',{year:'numeric',month:'short',day:'numeric'})}</div>
-        </div>`).join('');}
+            <p style="font-size:0.83rem;color:var(--text2);margin-bottom:6px">${r.comment||'<em style="color:var(--text3)">No comment</em>'}</p>
+            <div style="font-size:0.72rem;color:var(--text3)">${new Date(r.created_at).toLocaleDateString('en-KE',{year:'numeric',month:'short',day:'numeric'})}</div>
+        </div>`).join('')
+        :'<div class="profile-empty"><i class="fas fa-star"></i>No reviews yet</div>';
     // Load requests
-    const {data:reqs}=await db.from('requests').select('*').eq('user_id',u.id).order('created_at',{ascending:false});
-    document.getElementById('pStatRequests').textContent=(reqs||[]).length;
+    const reqs=await dbFetch(db.from('requests').select('*').eq('user_id',u.id).order('created_at',{ascending:false}));
+    document.getElementById('pStatRequests').textContent=reqs.length;
+    document.getElementById('overviewRequests').textContent=reqs.length;
     const reqList=document.getElementById('profileRequestsList');
-    if(!reqs||!reqs.length){reqList.innerHTML='<div class="profile-empty" style="margin-top:14px"><i class="fas fa-paper-plane"></i>No requests yet.</div>';}
-    else{reqList.innerHTML=reqs.map(r=>`
+    reqList.innerHTML=reqs.length?reqs.map(r=>`
         <div class="profile-card">
             <div class="profile-card-header">
                 <h4>${r.title}</h4>
@@ -3482,31 +3754,227 @@ async function openProfile() {
             </div>
             <p style="font-size:0.82rem;color:var(--text2);margin-bottom:8px">${r.description||''}</p>
             ${r.admin_reply?`<div style="background:rgba(37,99,235,0.07);border-left:3px solid var(--electric);padding:8px 12px;border-radius:0 8px 8px 0;font-size:0.8rem;color:var(--text2);margin-top:8px"><strong style="color:var(--electric)">Admin reply:</strong> ${r.admin_reply}</div>`:''}
-            <div style="font-size:0.73rem;color:var(--text3);margin-top:6px">${new Date(r.created_at).toLocaleDateString('en-KE',{year:'numeric',month:'short',day:'numeric'})}</div>
-        </div>`).join('');}
+            <div style="font-size:0.72rem;color:var(--text3);margin-top:6px">${new Date(r.created_at).toLocaleDateString('en-KE',{year:'numeric',month:'short',day:'numeric'})}</div>
+        </div>`).join('')
+        :'<div class="profile-empty"><i class="fas fa-paper-plane"></i>No requests yet</div>';
     // Load comments
-    const {data:comms}=await db.from('comments').select('*').eq('user_id',u.id).order('created_at',{ascending:false});
+    const comms=await dbFetch(db.from('comments').select('*').eq('user_id',u.id).order('created_at',{ascending:false}));
     const cl=document.getElementById('profileCommentsList');
-    if(!comms||!comms.length){cl.innerHTML='<div class="profile-empty" style="margin-top:14px"><i class="fas fa-comments"></i>No messages yet.</div>';}
-    else{cl.innerHTML=comms.map(c=>`
+    cl.innerHTML=comms.length?comms.map(c=>`
         <div class="profile-card">
             <div class="profile-card-header">
                 <span class="comment-type-tag ct-${c.type}">${ctIcon(c.type)} ${c.type}</span>
-                <span style="font-size:0.73rem;color:var(--text3)">${new Date(c.created_at).toLocaleDateString('en-KE',{year:'numeric',month:'short',day:'numeric'})}</span>
+                <div style="display:flex;align-items:center;gap:8px">
+                    <span style="font-size:0.72rem;color:var(--text3)">${new Date(c.created_at).toLocaleDateString('en-KE',{year:'numeric',month:'short',day:'numeric'})}</span>
+                    <button class="profile-delete-btn" onclick="deleteMyComment('${c.id}')"><i class="fas fa-trash"></i> Delete</button>
+                </div>
             </div>
-            <p style="font-size:0.85rem;color:var(--text2);margin-top:6px">${c.message}</p>
-        </div>`).join('');}
+            <p style="font-size:0.84rem;color:var(--text2);margin-top:6px">${c.message}</p>
+        </div>`).join('')
+        :'<div class="profile-empty"><i class="fas fa-comments"></i>No messages yet</div>';
+    // Overview recent
+    const all=[...reviews.slice(0,2).map(r=>({type:'review',label:`Left a ${r.rating}★ review for ${r.service||'General'}`,date:r.created_at})),
+               ...reqs.slice(0,2).map(r=>({type:'request',label:`Submitted request: "${r.title}"`,date:r.created_at})),
+               ...comms.slice(0,2).map(c=>({type:'comment',label:`Posted a ${c.type}`,date:c.created_at}))]
+        .sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,5);
+    const ov=document.getElementById('overviewRecentList');
+    ov.innerHTML=all.length?'<div class="profile-card"><h4 style="font-size:0.85rem;margin-bottom:12px;color:var(--text3)">Recent Activity</h4>'+all.map(a=>`
+        <div class="activity-item">
+            <div class="activity-dot"></div>
+            <div><div class="activity-text">${a.label}</div>
+            <div class="activity-time">${timeAgo(a.date)}</div></div>
+        </div>`).join('')+'</div>'
+        :'<div class="profile-empty"><i class="fas fa-star"></i>Your activity will appear here</div>';
+    loadNotifCount();
 }
 function ctIcon(t){return{comment:'💬',complaint:'🚨',suggestion:'💡',feedback:'👍'}[t]||'💬';}
+async function updateDisplayName(){
+    const name=document.getElementById('settingsNewName').value.trim();
+    const msg=document.getElementById('settingsNameMsg');
+    if(!name){msg.className='auth-msg show error';msg.textContent='Please enter a name.';return;}
+    msg.className='auth-msg show info';msg.textContent='Saving…';
+    const {error}=await db.auth.updateUser({data:{full_name:name}});
+    if(!error) await db.from('profiles').update({full_name:name}).eq('user_id',currentUser.id).catch(()=>{});
+    msg.className='auth-msg show '+(error?'error':'success');
+    msg.textContent=error?error.message:'✅ Name updated!';
+    if(!error){
+        currentUser.user_metadata={...currentUser.user_metadata,full_name:name};
+        document.getElementById('profileName').textContent=name;
+        document.getElementById('profileAvatar').textContent=name[0].toUpperCase();
+        updateHeaderForUser(currentUser).catch(()=>{});
+    }
+}
+async function updateEmail(){
+    const email=document.getElementById('settingsNewEmail').value.trim();
+    const msg=document.getElementById('settingsEmailMsg');
+    if(!email||!email.includes('@')){msg.className='auth-msg show error';msg.textContent='Enter a valid email.';return;}
+    msg.className='auth-msg show info';msg.textContent='Sending confirmation…';
+    const {error}=await db.auth.updateUser({email});
+    msg.className='auth-msg show '+(error?'error':'success');
+    msg.textContent=error?error.message:'✅ Confirmation sent! Check both inboxes to confirm the change.';
+}
+async function updatePassword(){
+    const pass=document.getElementById('settingsNewPass').value;
+    const confirm=document.getElementById('settingsConfirmPass').value;
+    const msg=document.getElementById('settingsPassMsg');
+    if(!pass||pass.length<6){msg.className='auth-msg show error';msg.textContent='Password must be at least 6 characters.';return;}
+    if(pass!==confirm){msg.className='auth-msg show error';msg.textContent='Passwords do not match.';return;}
+    msg.className='auth-msg show info';msg.textContent='Updating…';
+    const {error}=await db.auth.updateUser({password:pass});
+    msg.className='auth-msg show '+(error?'error':'success');
+    msg.textContent=error?error.message:'✅ Password updated successfully!';
+    if(!error){document.getElementById('settingsNewPass').value='';document.getElementById('settingsConfirmPass').value='';}
+}
+function toggleThemeFromSettings(btn){
+    const isOn=btn.classList.contains('on');
+    document.documentElement.classList.toggle('dark',isOn);
+    document.documentElement.classList.toggle('light',!isOn);
+    localStorage.setItem('dmn-theme',isOn?'dark':'light');
+}
+async function doForgotPassword_profile(){
+    const msg=document.getElementById('settingsMsg');
+    if(!currentUser){return;}
+    const {error}=await db.auth.resetPasswordForEmail(currentUser.email,{redirectTo:window.location.href});
+    msg.className='auth-msg show '+(error?'error':'success');
+    msg.textContent=error?error.message:'✅ Reset link sent to '+currentUser.email;
+}
+function confirmDeleteAccount(){
+    if(!confirm('Are you sure you want to delete your account? This cannot be undone.'))return;
+    db.auth.signOut().then(()=>{closeProfile();updateHeaderForGuest();showToast('Account deletion requires contacting support.');});
+}
+function shareProfileSite(){
+    const url=window.location.href;
+    if(navigator.share){navigator.share({title:'DMN Solutions',text:'Check out DMN Solutions!',url}).catch(()=>{});}
+    else{navigator.clipboard?.writeText(url).then(()=>showToast('Link copied!')).catch(()=>showToast('Copy: '+url));}
+}
+function contactSupport(){
+    const phone='254700000000';
+    window.open('https://wa.me/'+phone+'?text='+encodeURIComponent('Hello DMN Solutions, I need support.'),'_blank');
+}
 function closeProfile(){document.getElementById('profileModal').classList.remove('open');document.body.style.overflow='';}
+
+/* ── Activity Logging ────────────────────────────────────────────────────── */
+async function logActivity(actionType, resourceId='', resourceName=''){
+    if(!currentUser)return;
+    try{
+        await db.from('activity_log').insert({
+            user_id:currentUser.id, user_email:currentUser.email,
+            action_type:actionType,
+            resource_id:resourceId||null,
+            resource_name:resourceName||null
+        });
+    }catch(e){/* non-blocking */}
+}
+
+async function loadNotifCount(){
+    if(!currentUser)return;
+    try{
+        const nrows=await dbFetch(db.from('notifications').select('id').eq('user_id',currentUser.id).eq('is_read',false), [], 5000);
+        const count=nrows.length;
+        const badge=document.getElementById('profileNotifBadge');
+        if(badge){badge.textContent=count||0;badge.style.display=count>0?'inline':'none';}
+    }catch(e){}
+}
+
+async function loadProfileNotifications(){
+    if(!currentUser)return;
+    const list=document.getElementById('profileNotifList');
+    list.innerHTML='<div class="profile-empty"><i class="fas fa-spinner fa-spin"></i>Loading…</div>';
+    try{
+        const data=await dbFetch(db.from('notifications').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:false}).limit(50));
+        if(!data.length){list.innerHTML='<div class="profile-empty"><i class="fas fa-bell-slash"></i>No notifications yet</div>';return;}
+        const iconMap={info:'fas fa-info-circle',success:'fas fa-check-circle',warning:'fas fa-exclamation-triangle',reply:'fas fa-reply',badge:'fas fa-award',alert:'fas fa-bell'};
+        list.innerHTML=data.map(n=>`
+            <div class="notif-item ${n.is_read?'':'unread'}" id="notif-${n.id}">
+                <div class="notif-icon ${n.type||'info'}"><i class="${n.icon||iconMap[n.type]||'fas fa-bell'}"></i></div>
+                <div style="flex:1">
+                    <div class="notif-title">${n.title}</div>
+                    ${n.message?`<div class="notif-msg">${n.message}</div>`:''}
+                    <div class="notif-time">${timeAgo(n.created_at)}</div>
+                    ${!n.is_read?`<button class="notif-mark-btn" onclick="markNotifRead('${n.id}')">Mark as read</button>`:''}
+                </div>
+                ${!n.is_read?'<div class="notif-unread-dot"></div>':''}
+            </div>`).join('');
+        loadNotifCount();
+    }catch(e){list.innerHTML='<div class="profile-empty"><i class="fas fa-exclamation-triangle"></i>Could not load notifications</div>';}
+}
+
+async function markNotifRead(id){
+    await db.from('notifications').update({is_read:true}).eq('id',id);
+    document.getElementById('notif-'+id)?.classList.remove('unread');
+    document.querySelector(`#notif-${id} .notif-mark-btn`)?.remove();
+    document.querySelector(`#notif-${id} .notif-unread-dot`)?.remove();
+    loadNotifCount();
+}
+
+async function markAllNotifsRead(){
+    if(!currentUser)return;
+    await db.from('notifications').update({is_read:true}).eq('user_id',currentUser.id).eq('is_read',false);
+    loadProfileNotifications();
+    showToast('All notifications marked as read.');
+}
+
+async function loadProfileActivity(){
+    if(!currentUser)return;
+    const list=document.getElementById('profileActivityList');
+    const lastSeen=document.getElementById('lastSeenInfo');
+    list.innerHTML='<div class="profile-empty"><i class="fas fa-spinner fa-spin"></i>Loading…</div>';
+    try{
+        // Show last seen
+        const profRows=await dbFetch(db.from('profiles').select('last_seen_at').eq('user_id',currentUser.id).limit(1),[],5000);
+        const prof=profRows.length?profRows[0]:null;
+        if(prof?.last_seen_at && lastSeen){
+            lastSeen.innerHTML=`<div class="last-seen-badge"><i class="fas fa-circle" style="font-size:0.5rem"></i> Last active: ${timeAgo(prof.last_seen_at)}</div>`;
+        }
+        const acts=await dbFetch(db.from('activity_log').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:false}).limit(60));
+        if(!acts.length){list.innerHTML='<div class="profile-empty"><i class="fas fa-clock"></i>No activity recorded yet</div>';return;}
+        const actionLabels={
+            login:'Signed in',logout:'Signed out',signup:'Created account',
+            view_page:'Visited page',view_project:'Viewed project',view_service:'Viewed service',
+            submit_feedback:'Submitted a review',submit_request:'Submitted a service request',
+            submit_comment:'Posted a comment',update_profile:'Updated profile',
+            forgot_password:'Requested password reset',
+        };
+        list.innerHTML='<div>'+acts.map(a=>`
+            <div class="activity-item">
+                <div class="activity-dot"></div>
+                <div>
+                    <div class="activity-text"><strong>${actionLabels[a.action_type]||a.action_type}</strong>${a.resource_name?' — '+a.resource_name:''}</div>
+                    <div class="activity-time">${timeAgo(a.created_at)}</div>
+                </div>
+            </div>`).join('')+'</div>';
+    }catch(e){list.innerHTML='<div class="profile-empty"><i class="fas fa-exclamation-triangle"></i>Could not load activity</div>';}
+}
+
 function switchProfileTab(tab){
-    document.querySelectorAll('.profile-tab').forEach((b,i)=>{
-        const tabs=['reviews','requests','comments'];
-        b.classList.toggle('active',tabs[i]===tab);
+    const tabs=['overview','reviews','requests','comments','notifications','activity','settings'];
+    tabs.forEach(t=>{
+        const nav=document.getElementById('pnav-'+t);
+        const panel=document.getElementById('profilePanel-'+t);
+        if(nav)nav.classList.toggle('active',t===tab);
+        if(panel)panel.classList.toggle('active',t===tab);
     });
-    document.querySelectorAll('.profile-panel').forEach(p=>p.classList.remove('active'));
-    const panel=document.getElementById('profilePanel-'+tab);
-    if(panel)panel.classList.add('active');
+    if(tab==='notifications')loadProfileNotifications();
+    if(tab==='activity')loadProfileActivity();
+    // Pre-fill settings fields with current user data
+    if(tab==='settings'&&currentUser){
+        const nameEl=document.getElementById('settingsNewName');
+        if(nameEl)nameEl.placeholder=currentUser.user_metadata?.full_name||currentUser.email||'Your name';
+        const emailEl=document.getElementById('settingsNewEmail');
+        if(emailEl)emailEl.placeholder=currentUser.email||'Current email';
+    }
+    // close sidebar on mobile after selection
+    if(window.innerWidth<=768){
+        const sb=document.getElementById('profileSidebar');
+        const ov=document.getElementById('profileSidebarOverlay');
+        if(sb)sb.classList.remove('open');
+        if(ov)ov.classList.remove('open');
+    }
+}
+function toggleProfileSidebar(){
+    const sb=document.getElementById('profileSidebar');
+    const ov=document.getElementById('profileSidebarOverlay');
+    sb.classList.toggle('open');ov.classList.toggle('open');
 }
 
 /* ── Submit Request ────────────────────────────────────────────────────────── */
@@ -3523,6 +3991,7 @@ async function submitRequest(){
     });
     if(error){showMsg('reqMsg','Error: '+error.message,'error');return;}
     showMsg('reqMsg','✅ Request submitted! We will respond soon.','success');
+    logActivity('submit_request','',title);
     document.getElementById('reqTitle').value='';
     document.getElementById('reqDesc').value='';
     document.getElementById('reqService').value='';
@@ -3546,6 +4015,7 @@ async function submitComment(){
     });
     if(error){showMsg('commentMsgStatus','Error: '+error.message,'error');return;}
     showMsg('commentMsgStatus','✅ Message sent successfully!','success');
+    logActivity('submit_comment','',currentCType);
     document.getElementById('commentMsg').value='';
     setTimeout(()=>openProfile(),800);
 }
@@ -3578,7 +4048,7 @@ function selectBadge(el, key){
     selectedBadgeKey=key;
 }
 async function loadCurrentBadgesInModal(email){
-    const {data}=await db.from('badges').select('*').eq('user_email',email);
+    const data=await dbFetch(db.from('badges').select('*').eq('user_email',email));
     const wrap=document.getElementById('currentMemberBadges');
     if(!data||!data.length){wrap.innerHTML='<p style="font-size:0.78rem;color:var(--text3);margin-bottom:8px">No badges yet.</p>';return;}
     wrap.innerHTML=`<p style="font-size:0.75rem;color:var(--text3);margin-bottom:6px;font-family:'Syne',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:0.06em">Current Badges</p>`+
@@ -3618,32 +4088,63 @@ async function openAdminDashboard(){
 }
 function closeAdminDashboard(){document.getElementById('adminDashboard').classList.remove('open');document.body.style.overflow='';}
 
+/* ── DB fetch with timeout ────────────────────────────────────────────────── */
+async function dbFetch(queryPromise, fallback=[], ms=12000){
+    try {
+        const timeout = new Promise((_,r)=>setTimeout(()=>r(new Error('timeout')),ms));
+        const {data,error} = await Promise.race([queryPromise, timeout]);
+        if(error||!data) return fallback;
+        return data;
+    } catch(e){ return fallback; }
+}
+
 async function loadAdminData(){
-    const {data:reviews}=await db.from('feedback').select('*').order('created_at',{ascending:false});
-    adminAllReviews=reviews||[];
+    // Update stats to show loading
+    ['statTotalReviews','statAvgRating','statTotalMembers','statTopService']
+        .forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='…';});
+
+    const reviews = await dbFetch(
+        db.from('feedback').select('*').order('created_at',{ascending:false}));
+    adminAllReviews = reviews;
     renderAdminReviews(adminAllReviews);
     renderAdminHistory(adminAllReviews);
-    const total=adminAllReviews.length;
-    const avg=total?(adminAllReviews.reduce((s,r)=>s+r.rating,0)/total).toFixed(1):'–';
-    document.getElementById('statTotalReviews').textContent=total;
-    document.getElementById('statAvgRating').textContent=total?avg+'★':'–';
+
+    const total = adminAllReviews.length;
+    const avg   = total ? (adminAllReviews.reduce((s,r)=>s+r.rating,0)/total).toFixed(1) : '–';
+    document.getElementById('statTotalReviews').textContent = total||'0';
+    document.getElementById('statAvgRating').textContent    = total ? avg+'★' : '–';
     if(total){
         const svcMap={};
-        adminAllReviews.forEach(r=>{if(!svcMap[r.service])svcMap[r.service]={sum:0,count:0};svcMap[r.service].sum+=r.rating;svcMap[r.service].count++;});
+        adminAllReviews.forEach(r=>{if(!svcMap[r.service])svcMap[r.service]={sum:0,count:0};
+            svcMap[r.service].sum+=r.rating;svcMap[r.service].count++;});
         const top=Object.entries(svcMap).sort((a,b)=>(b[1].sum/b[1].count)-(a[1].sum/a[1].count))[0];
-        document.getElementById('statTopService').textContent=top?top[0].split(' ')[0]:'–';
+        document.getElementById('statTopService').textContent = top ? top[0].split(' ')[0] : '–';
+    } else {
+        document.getElementById('statTopService').textContent = '–';
     }
-    const uniqueEmails=[...new Set(adminAllReviews.map(r=>r.user_email).filter(Boolean))];
-    document.getElementById('statTotalMembers').textContent=uniqueEmails.length;
-    const memberMap={};
-    adminAllReviews.forEach(r=>{
-        if(!r.user_email)return;
-        if(!memberMap[r.user_email])memberMap[r.user_email]={email:r.user_email,name:r.user_name||'–',count:0,joined:r.created_at};
-        memberMap[r.user_email].count++;
-        if(r.created_at<memberMap[r.user_email].joined)memberMap[r.user_email].joined=r.created_at;
-    });
-    adminAllMembers=Object.values(memberMap);
+
+    // Load members — merge profiles + any emails seen in feedback/requests
+    const profiles = await dbFetch(
+        db.from('profiles').select('*').order('created_at',{ascending:false}));
+
+    // Also collect emails from feedback/requests in case some users have no profile row yet
+    const fbEmails=new Set((adminAllReviews||[]).map(r=>r.user_email).filter(Boolean));
+    const reqData=await dbFetch(db.from('requests').select('user_email,user_name,created_at').limit(200));
+    reqData.forEach(r=>{if(r.user_email)fbEmails.add(r.user_email);});
+
+    // Merge: profiles take priority; add ghost rows for emails not yet in profiles
+    const profileEmails=new Set(profiles.map(p=>p.email));
+    const ghostRows=[...fbEmails].filter(e=>!profileEmails.has(e)).map(e=>({
+        user_id:null,email:e,full_name:e.split('@')[0],role:'member',is_active:true,
+        last_seen_at:null,created_at:null,_ghost:true
+    }));
+    adminAllMembers=[...profiles,...ghostRows];
+    document.getElementById('statTotalMembers').textContent=adminAllMembers.length||'0';
     await renderAdminMembers(adminAllMembers);
+    if(!adminAllMembers.length){
+        const tbody=document.getElementById('adminMembersBody');
+        if(tbody) tbody.innerHTML=`<tr><td colspan="7"><div class="admin-empty"><i class="fas fa-users"></i>No members yet<br><small style="color:var(--text3)">Members appear here after they sign up</small><br><button onclick="loadAdminData()" style="margin-top:10px;background:none;border:1px solid var(--border);color:var(--text2);padding:6px 14px;border-radius:8px;cursor:pointer;font-size:0.78rem"><i class="fas fa-sync-alt"></i> Retry</button></div></td></tr>`;
+    }
     loadAdminRequests();
     loadAdminComments();
 }
@@ -3676,32 +4177,106 @@ async function deleteReview(id){
 
 async function renderAdminMembers(data){
     const tbody=document.getElementById('adminMembersBody');
-    if(!data.length){tbody.innerHTML=`<tr><td colspan="6"><div class="admin-empty"><i class="fas fa-users"></i>No members yet</div></td></tr>`;return;}
-    const {data:allBadges}=await db.from('badges').select('*');
+    if(!data.length){tbody.innerHTML=`<tr><td colspan="7"><div class="admin-empty"><i class="fas fa-users"></i>No members yet</div></td></tr>`;return;}
+    const allBadges=await dbFetch(db.from('badges').select('*'));
     const badgeMap={};
     (allBadges||[]).forEach(b=>{if(!badgeMap[b.user_email])badgeMap[b.user_email]=[];badgeMap[b.user_email].push(b);});
     tbody.innerHTML=data.map((m,i)=>{
         const mb=badgeMap[m.email]||[];
-        const chips=mb.map(b=>`<span class="badge-chip ${b.badge_key}" style="font-size:0.68rem">${b.badge_icon} ${b.badge_label}</span>`).join('');
+        const chips=mb.map(b=>`<span class="badge-chip ${b.badge_key}" style="font-size:0.65rem">${b.badge_icon} ${b.badge_label}</span>`).join('');
+        const isActive=m.is_active!==false;
+        const lastSeen=m.last_seen_at?timeAgo(m.last_seen_at):'Never';
         return `<tr>
             <td style="color:var(--text3);font-size:0.78rem">${i+1}</td>
-            <td style="font-size:0.85rem;font-weight:500">${m.email}</td>
-            <td style="font-size:0.85rem">${m.name}</td>
-            <td style="font-size:0.78rem;color:var(--text3)">${new Date(m.joined).toLocaleDateString('en-KE',{year:'numeric',month:'short',day:'numeric'})}</td>
-            <td><div class="admin-member-badges">${chips||'<span style="color:var(--text3);font-size:0.75rem">No badges</span>'}</div></td>
             <td>
-                <span style="background:rgba(37,99,235,0.1);color:var(--electric);padding:3px 8px;border-radius:6px;font-size:0.78rem;font-weight:600;margin-right:6px">${m.count} review${m.count!==1?'s':''}</span>
-                <button class="edit-btn" onclick="openBadgeModal('${m.email}','${m.name}')"><i class="fas fa-award"></i> Badge</button>
+                <div style="font-weight:600;font-size:0.84rem">${m.full_name||'–'}</div>
+                <div style="font-size:0.74rem;color:var(--text3)">${m.email}</div>
+                <div style="margin-top:3px">${chips}</div>
+            </td>
+            <td><span class="user-role-badge role-${m.role||'member'}">${m.role||'member'}</span></td>
+            <td><span class="${isActive?'user-status-active':'user-status-inactive'}"><i class="fas fa-circle" style="font-size:0.5rem"></i> ${isActive?'Active':'Inactive'}</span></td>
+            <td style="font-size:0.78rem;color:var(--text3)">${lastSeen}</td>
+            <td style="font-size:0.78rem;color:var(--text3);white-space:nowrap">${new Date(m.created_at).toLocaleDateString('en-KE',{year:'numeric',month:'short',day:'numeric'})}</td>
+            <td style="white-space:nowrap">
+                <button class="user-action-btn user-action-reset" onclick="resetUserPassword('${m.email}','${m.user_id}')"><i class="fas fa-key"></i> Reset PW</button>
+                <button class="user-action-btn user-action-${isActive?'deactivate':'activate'}" onclick="toggleUserActive('${m.user_id}',${isActive})">${isActive?'<i class="fas fa-ban"></i> Deactivate':'<i class="fas fa-check"></i> Activate'}</button>
+                <button class="user-action-btn" style="background:rgba(37,99,235,0.1);color:var(--electric)" onclick="openBadgeModal('${m.email}','${m.full_name||m.email}')"><i class="fas fa-award"></i> Badge</button>
+                <button class="user-action-btn user-action-remove" onclick="removeUser('${m.user_id}','${m.email}')"><i class="fas fa-trash"></i> Remove</button>
             </td>
         </tr>`;
     }).join('');
 }
 
+async function resetUserPassword(email, userId){
+    if(!confirm(`Send password reset email to ${email}?`))return;
+    const {error}=await db.auth.resetPasswordForEmail(email,{redirectTo:window.location.href});
+    if(error){showToast('Error: '+error.message);return;}
+    // Log it
+    await db.from('password_reset_log').insert({
+        target_user_id:userId||null, target_email:email,
+        initiated_by:currentUser.email, method:'admin_reset', status:'sent'
+    }).catch(()=>{});
+    // Notify the user
+    if(userId){
+        await db.from('notifications').insert({
+            user_id:userId, title:'Password reset link sent',
+            message:'An admin has triggered a password reset. Check your email for the reset link.',
+            type:'warning', icon:'fas fa-key'
+        }).catch(()=>{});
+    }
+    showToast('Reset email sent to '+email);
+}
+
+async function toggleUserActive(userId, currentlyActive){
+    const newState=!currentlyActive;
+    const {error}=await db.from('profiles').update({is_active:newState}).eq('user_id',userId);
+    if(error){showToast('Error: '+error.message);return;}
+    showToast(newState?'User activated.':'User deactivated.');
+    loadAdminData();
+}
+
+async function removeUser(userId, email){
+    if(!confirm(`Permanently remove ${email}? This will delete their profile record. Auth account must be removed from Supabase dashboard.`))return;
+    // Delete profile and related data
+    await db.from('badges').delete().eq('user_email',email);
+    await db.from('activity_log').delete().eq('user_id',userId);
+    await db.from('notifications').delete().eq('user_id',userId);
+    const {error}=await db.from('profiles').delete().eq('user_id',userId);
+    if(error){showToast('Error: '+error.message);return;}
+    showToast('User record removed. Delete their auth account in Supabase dashboard.');
+    loadAdminData();
+}
+
+function openAddUserModal(){
+    document.getElementById('addUserModalOverlay').classList.add('open');
+    document.getElementById('newUserEmail').value='';
+    document.getElementById('newUserName').value='';
+    document.getElementById('addUserMsg').className='auth-msg';
+}
+function closeAddUserModal(){document.getElementById('addUserModalOverlay').classList.remove('open');}
+async function submitAddUser(){
+    const email=document.getElementById('newUserEmail').value.trim();
+    const name=document.getElementById('newUserName').value.trim();
+    const msg=document.getElementById('addUserMsg');
+    if(!email){msg.className='auth-msg show error';msg.textContent='Email address is required.';return;}
+    const btn=document.getElementById('addUserSubmitBtn');
+    btn.disabled=true;btn.innerHTML='<i class="fas fa-check"></i> Done';
+    msg.className='auth-msg show success';
+    const supaLink='https://supabase.com/dashboard/project/eogezhtvaoabtvsiidth/auth/users';
+    msg.innerHTML=`✅ To add <strong>${name||email}</strong> as a member:<br>
+        <a href="${supaLink}" target="_blank" style="color:#60a5fa;font-weight:700;text-decoration:underline">
+        📧 Open Supabase → Auth → Users → Invite user</a><br>
+        <small style="color:#6b7280">Enter email: ${email} — they'll get a signup link</small><br><br>
+        <strong>Or share your site link</strong> and ask them to create an account themselves.`;
+    setTimeout(()=>{btn.disabled=false;btn.innerHTML='<i class="fas fa-paper-plane"></i> Send Invite';},2000);
+}
+
 async function loadAdminRequests(){
     const tbody=document.getElementById('adminRequestsBody');
     if(!tbody)return;
-    const {data}=await db.from('requests').select('*').order('created_at',{ascending:false});
-    if(!data||!data.length){tbody.innerHTML=`<tr><td colspan="7"><div class="admin-empty"><i class="fas fa-paper-plane"></i>No requests yet</div></td></tr>`;return;}
+    tbody.innerHTML=`<tr><td colspan="7" class="admin-empty"><i class="fas fa-spinner fa-spin"></i> Loading…</td></tr>`;
+    const data = await dbFetch(db.from('requests').select('*').order('created_at',{ascending:false}));
+    if(!data.length){tbody.innerHTML=`<tr><td colspan="7"><div class="admin-empty"><i class="fas fa-paper-plane"></i>No requests yet</div></td></tr>`;return;}
     tbody.innerHTML=data.map((r,i)=>`
         <tr>
             <td style="color:var(--text3);font-size:0.78rem">${i+1}</td>
@@ -3739,8 +4314,9 @@ async function sendReply(id){
 async function loadAdminComments(){
     const tbody=document.getElementById('adminCommentsBody');
     if(!tbody)return;
-    const {data}=await db.from('comments').select('*').order('created_at',{ascending:false});
-    if(!data||!data.length){tbody.innerHTML=`<tr><td colspan="6"><div class="admin-empty"><i class="fas fa-comments"></i>No comments yet</div></td></tr>`;return;}
+    tbody.innerHTML=`<tr><td colspan="6" class="admin-empty"><i class="fas fa-spinner fa-spin"></i> Loading…</td></tr>`;
+    const data = await dbFetch(db.from('comments').select('*').order('created_at',{ascending:false}));
+    if(!data.length){tbody.innerHTML=`<tr><td colspan="6"><div class="admin-empty"><i class="fas fa-comments"></i>No comments yet</div></td></tr>`;return;}
     tbody.innerHTML=data.map((c,i)=>`
         <tr>
             <td style="color:var(--text3);font-size:0.78rem">${i+1}</td>
@@ -3779,12 +4355,14 @@ function filterAdminReviews(btn,filter){
 }
 
 function switchAdminTab(tab){
-    const tabs=['reviews','portfolio','members','requests-admin','comments-admin','history'];
+    const tabs=['reviews','portfolio','services-admin','members','requests-admin','comments-admin','history'];
     document.querySelectorAll('.admin-tab-btn').forEach((b,i)=>b.classList.toggle('active',tabs[i]===tab));
     document.querySelectorAll('.admin-panel').forEach(p=>p.classList.remove('active'));
     const panel=document.getElementById('adminPanel-'+tab);
     if(panel)panel.classList.add('active');
     if(tab==='portfolio')loadAdminPortfolio();
+    if(tab==='services-admin')loadAdminServices();
+    if(tab==='members')loadAdminData();
     if(tab==='requests-admin')loadAdminRequests();
     if(tab==='comments-admin')loadAdminComments();
 }
@@ -3792,9 +4370,16 @@ function switchAdminTab(tab){
 /* ── Portfolio CRUD ────────────────────────────────────────────────────────── */
 async function loadAdminPortfolio(){
     const grid=document.getElementById('adminPortfolioGrid');if(!grid)return;
-    const {data}=await db.from('portfolio').select('*').order('sort_order').order('created_at',{ascending:false});
+    grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--text3)"><i class="fas fa-spinner fa-spin" style="font-size:1.3rem;display:block;margin-bottom:8px"></i>Loading portfolio…</div>`;
+    const data=await dbFetch(db.from('portfolio').select('*').order('sort_order').order('created_at',{ascending:false}));
     const projects=data||[];
-    if(!projects.length){grid.innerHTML=`<button class="add-project-btn" onclick="openPfModal()"><i class="fas fa-plus-circle"></i><span>Add First Project</span></button>`;return;}
+    if(!projects.length){
+        grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:20px">
+            <button class="add-project-btn" onclick="openPfModal()"><i class="fas fa-plus-circle"></i><span>Add First Project</span></button>
+            <div style="margin-top:14px"><button onclick="loadAdminPortfolio()" style="background:none;border:1px solid var(--border);color:var(--text2);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:0.8rem"><i class="fas fa-sync-alt"></i> Retry (slow connection?)</button></div>
+        </div>`;
+        return;
+    }
     grid.innerHTML=projects.map(p=>`
         <div class="admin-pf-card">
             <div class="admin-pf-thumb">
@@ -3863,6 +4448,100 @@ async function deletePfItem(id){
     showToast('Project deleted.');loadAdminPortfolio();loadPortfolioFromDB();
 }
 
+/* ── Services CRUD ────────────────────────────────────────────────────────── */
+async function loadAdminServices(){
+    const grid=document.getElementById('adminServicesGrid');if(!grid)return;
+    grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:30px;color:var(--text3)"><i class="fas fa-spinner fa-spin" style="font-size:1.3rem;display:block;margin-bottom:8px"></i>Loading…</div>';
+    const svcs = await dbFetch(
+        db.from('services').select('*').order('sort_order').order('created_at',{ascending:false}));
+    if(!svcs.length){
+        grid.innerHTML=`<button class="add-svc-btn" onclick="openAdminSvcModal()"><i class="fas fa-plus-circle"></i><span>Add First Service</span></button>`;
+        return;
+    }
+    grid.innerHTML=svcs.map(s=>`
+        <div class="admin-svc-card ${s.is_active?'':'admin-svc-inactive'}">
+            <div class="admin-svc-icon"><i class="${s.icon||'fas fa-cog'}"></i></div>
+            <h4>${s.title}</h4>
+            <p>${s.description||'No description'}</p>
+            ${s.price_label?`<div class="admin-svc-price"><i class="fas fa-tag"></i> ${s.price_label}</div>`:''}
+            <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:auto;padding-top:10px;">
+                <button class="edit-btn" onclick='openAdminSvcModal(${JSON.stringify(s)})'><i class="fas fa-edit"></i> Edit</button>
+                <button class="user-action-btn ${s.is_active?'user-action-deactivate':'user-action-activate'}" onclick="toggleSvcActive('${s.id}',${s.is_active})">
+                    ${s.is_active?'<i class="fas fa-eye-slash"></i> Hide':'<i class="fas fa-eye"></i> Show'}
+                </button>
+                <button class="del-btn" onclick="deleteSvc('${s.id}')"><i class="fas fa-trash"></i></button>
+            </div>
+        </div>`).join('')+
+        `<button class="add-svc-btn" onclick="openAdminSvcModal()"><i class="fas fa-plus-circle"></i><span>Add Service</span></button>`;
+}
+
+function openAdminSvcModal(item){
+    document.getElementById('svcModalOverlay').classList.add('open');
+    document.getElementById('svcMsg').className='auth-msg';
+    if(item&&typeof item==='object'){
+        document.getElementById('svcModalTitle').textContent='Edit Service';
+        document.getElementById('svcEditId').value=item.id||'';
+        document.getElementById('svcTitle').value=item.title||'';
+        document.getElementById('svcDesc').value=item.description||'';
+        document.getElementById('svcIcon').value=item.icon||'';
+        document.getElementById('svcPrice').value=item.price_label||'';
+        document.getElementById('svcFeatures').value=Array.isArray(item.features)?item.features.join('\n'):(item.features||'');
+        document.getElementById('svcCategory').value=item.category||'general';
+        document.getElementById('svcOrder').value=item.sort_order||0;
+        document.getElementById('svcActiveToggle').className='pf-toggle'+(item.is_active?' on':'');
+    }else{
+        document.getElementById('svcModalTitle').textContent='Add New Service';
+        document.getElementById('svcEditId').value='';
+        ['svcTitle','svcDesc','svcIcon','svcPrice','svcFeatures'].forEach(id=>document.getElementById(id).value='');
+        document.getElementById('svcCategory').value='general';
+        document.getElementById('svcOrder').value=0;
+        document.getElementById('svcActiveToggle').className='pf-toggle on';
+    }
+}
+function closeSvcModal(){document.getElementById('svcModalOverlay').classList.remove('open');}
+function handleSvcOverlayClick(e){if(e.target===document.getElementById('svcModalOverlay'))closeSvcModal();}
+
+async function saveSvcItem(){
+    const title=document.getElementById('svcTitle').value.trim();
+    if(!title){showSvcMsg('Service title is required.','error');return;}
+    const id=document.getElementById('svcEditId').value;
+    const featuresRaw=document.getElementById('svcFeatures').value.trim();
+    const features=featuresRaw?featuresRaw.split('\n').map(f=>f.trim()).filter(Boolean):[];
+    const payload={
+        title,
+        description:document.getElementById('svcDesc').value.trim(),
+        icon:document.getElementById('svcIcon').value.trim()||'fas fa-cog',
+        price_label:document.getElementById('svcPrice').value.trim(),
+        features,
+        category:document.getElementById('svcCategory').value,
+        sort_order:parseInt(document.getElementById('svcOrder').value)||0,
+        is_active:document.getElementById('svcActiveToggle').classList.contains('on'),
+        updated_at:new Date().toISOString()
+    };
+    const btn=document.getElementById('svcSaveBtn');
+    btn.disabled=true;btn.textContent='Saving…';
+    let error;
+    if(id){({error}=await db.from('services').update(payload).eq('id',id));}
+    else{({error}=await db.from('services').insert(payload));}
+    btn.disabled=false;btn.innerHTML='<i class="fas fa-save"></i> Save Service';
+    if(error){showSvcMsg('Error: '+error.message,'error');return;}
+    showSvcMsg('✅ Service saved!','success');
+    setTimeout(()=>{closeSvcModal();loadAdminServices();loadPublicServices();},700);
+}
+function showSvcMsg(msg,type){const el=document.getElementById('svcMsg');el.textContent=msg;el.className=`auth-msg show ${type}`;}
+
+async function toggleSvcActive(id, currentlyActive){
+    await db.from('services').update({is_active:!currentlyActive}).eq('id',id);
+    showToast(currentlyActive?'Service hidden.':'Service shown.');
+    loadAdminServices();loadPublicServices();
+}
+async function deleteSvc(id){
+    if(!confirm('Delete this service permanently?'))return;
+    const {error}=await db.from('services').delete().eq('id',id);
+    if(error){showToast('Error: '+error.message);return;}
+    showToast('Service deleted.');loadAdminServices();loadPublicServices();
+}
+
 /* ── Init ────────────────────────────────────────────────────────────────── */
 initAuth();
 </script>
@@ -3924,112 +4603,393 @@ initAuth();
 </div>
 
 
-<!-- ─── PROFILE MODAL ─── -->
-<div id="profileModal">
-    <div class="profile-header-band">
-        <div class="profile-header-inner">
-            <div style="display:flex;align-items:center;gap:10px;">
-                <button class="icon-btn" onclick="closeProfile()" style="color:white;background:rgba(255,255,255,0.15)" title="Back">
-                    <i class="fas fa-arrow-left"></i>
-                </button>
-                <span style="color:white;font-family:'Syne',sans-serif;font-weight:700;font-size:0.95rem;">My Profile</span>
-            </div>
-            <span id="profileJoinedBadge" class="profile-joined-badge">
-                <i class="fas fa-calendar-alt"></i> <span id="profileJoinedText">Member</span>
-            </span>
+<!-- ─── ADD USER MODAL ─── -->
+<div class="svc-modal-overlay" id="addUserModalOverlay" onclick="if(event.target===this)closeAddUserModal()">
+    <div class="svc-modal-box">
+        <div class="svc-modal-header">
+            <h3><i class="fas fa-user-plus" style="color:var(--electric)"></i> Add New Member</h3>
+            <button class="auth-close" onclick="closeAddUserModal()"><i class="fas fa-times"></i></button>
         </div>
-        <div class="profile-avatar-wrap">
-            <div class="profile-avatar" id="profileAvatar">U</div>
-            <div class="profile-name-block">
-                <h2 id="profileName">Member</h2>
-                <div class="profile-email" id="profileEmail"></div>
-                <div class="profile-badges-row" id="profileBadgesRow"></div>
+        <div class="svc-modal-body">
+            <p style="font-size:0.82rem;color:var(--text2);margin-bottom:16px;line-height:1.6">Enter the person's details. They'll need to sign up using this email, or click the Supabase link shown after submitting to send a real email invite.</p>
+            <div class="auth-msg" id="addUserMsg"></div>
+            <div class="svc-field">
+                <label>Full Name</label>
+                <input type="text" id="newUserName" placeholder="e.g. John Doe">
             </div>
+            <div class="svc-field">
+                <label>Email Address *</label>
+                <input type="email" id="newUserEmail" placeholder="user@example.com">
+            </div>
+            <button class="auth-submit" id="addUserSubmitBtn" onclick="submitAddUser()">
+                <i class="fas fa-paper-plane"></i> Send Invite
+            </button>
         </div>
     </div>
+</div>
 
-    <div class="profile-content">
-        <div class="profile-stats-row" id="profileStatsRow">
-            <div class="profile-stat">
-                <div class="profile-stat-num" id="pStatReviews">0</div>
-                <div class="profile-stat-label">Reviews Left</div>
-            </div>
-            <div class="profile-stat">
-                <div class="profile-stat-num" id="pStatRequests">0</div>
-                <div class="profile-stat-label">Requests Made</div>
-            </div>
-            <div class="profile-stat">
-                <div class="profile-stat-num" id="pStatBadges">0</div>
-                <div class="profile-stat-label">Badges Earned</div>
-            </div>
+<!-- ─── SERVICE MODAL (Admin Add/Edit) ─── -->
+<div class="svc-modal-overlay" id="svcModalOverlay" onclick="handleSvcOverlayClick(event)">
+    <div class="svc-modal-box">
+        <div class="svc-modal-header">
+            <h3 id="svcModalTitle">Add New Service</h3>
+            <button class="auth-close" onclick="closeSvcModal()"><i class="fas fa-times"></i></button>
         </div>
-
-        <div class="profile-tabs">
-            <button class="profile-tab active" onclick="switchProfileTab('reviews')"><i class="fas fa-star"></i> My Reviews</button>
-            <button class="profile-tab" onclick="switchProfileTab('requests')"><i class="fas fa-paper-plane"></i> My Requests</button>
-            <button class="profile-tab" onclick="switchProfileTab('comments')"><i class="fas fa-comments"></i> Comments & Complaints</button>
-        </div>
-
-        <!-- Reviews Tab -->
-        <div class="profile-panel active" id="profilePanel-reviews">
-            <div id="profileReviewsList">
-                <div class="profile-empty"><i class="fas fa-star"></i>No reviews yet</div>
+        <div class="svc-modal-body">
+            <div class="auth-msg" id="svcMsg"></div>
+            <input type="hidden" id="svcEditId">
+            <div class="svc-field">
+                <label>Service Title *</label>
+                <input type="text" id="svcTitle" placeholder="e.g. Web Development">
             </div>
-        </div>
-
-        <!-- Requests Tab -->
-        <div class="profile-panel" id="profilePanel-requests">
-            <div class="req-form">
-                <h4><i class="fas fa-plus-circle" style="color:var(--electric)"></i> Submit a Service Request</h4>
-                <div class="auth-field">
-                    <label>Request Title</label>
-                    <input type="text" id="reqTitle" placeholder="e.g. I need a new website for my business">
-                </div>
-                <div class="auth-field">
-                    <label>Service Needed</label>
-                    <select class="feedback-service-select" id="reqService" style="margin-bottom:0">
-                        <option value="">Select service…</option>
-                        <option>Web Development</option>
-                        <option>Mobile App</option>
-                        <option>E-commerce</option>
-                        <option>SEO & Marketing</option>
-                        <option>UI/UX Design</option>
-                        <option>Cloud / SaaS</option>
-                        <option>Other</option>
+            <div class="svc-field">
+                <label>Description</label>
+                <textarea id="svcDesc" placeholder="Brief description shown to clients…"></textarea>
+            </div>
+            <div class="svc-field">
+                <label>Icon (Font Awesome class)</label>
+                <input type="text" id="svcIcon" placeholder="fas fa-code">
+            </div>
+            <div class="svc-field">
+                <label>Price Label</label>
+                <input type="text" id="svcPrice" placeholder="From KES 5,000 or Contact us">
+            </div>
+            <div class="svc-field">
+                <label>Features (one per line)</label>
+                <textarea id="svcFeatures" placeholder="Responsive design&#10;Mobile-first&#10;SEO ready" style="min-height:90px"></textarea>
+            </div>
+            <div style="display:flex;gap:14px;">
+                <div class="svc-field" style="flex:1">
+                    <label>Category</label>
+                    <select id="svcCategory">
+                        <option value="general">General</option>
+                        <option value="web">Web</option>
+                        <option value="mobile">Mobile</option>
+                        <option value="design">Design</option>
+                        <option value="marketing">Marketing</option>
+                        <option value="cloud">Cloud</option>
                     </select>
                 </div>
-                <div class="auth-field">
-                    <label>Description</label>
-                    <textarea class="feedback-textarea" id="reqDesc" placeholder="Describe what you need in detail…" style="margin-bottom:0;min-height:80px"></textarea>
+                <div class="svc-field" style="width:90px">
+                    <label>Sort Order</label>
+                    <input type="number" id="svcOrder" value="0" min="0">
                 </div>
-                <div class="auth-msg" id="reqMsg" style="margin-top:10px"></div>
-                <button class="auth-submit" style="margin-top:10px" onclick="submitRequest()">
-                    <i class="fas fa-paper-plane"></i> Submit Request
+            </div>
+            <div class="pf-toggle-row">
+                <button type="button" class="pf-toggle on" id="svcActiveToggle" onclick="this.classList.toggle('on')"></button>
+                <span class="pf-toggle-label">Active (visible on site)</span>
+            </div>
+            <button class="auth-submit" id="svcSaveBtn" onclick="saveSvcItem()">
+                <i class="fas fa-save"></i> Save Service
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ─── PROFILE MODAL ─── -->
+<div id="profileModal">
+    <!-- Top bar -->
+    <div class="profile-topbar">
+        <button class="profile-topbar-hamburger" onclick="toggleProfileSidebar()" title="Menu">
+            <i class="fas fa-bars"></i>
+        </button>
+        <span class="profile-topbar-title">My Account</span>
+        <button class="profile-topbar-back" onclick="closeProfile()">
+            <i class="fas fa-arrow-left"></i> Back to Site
+        </button>
+    </div>
+
+    <!-- Sidebar overlay (mobile) -->
+    <div class="profile-sidebar-overlay" id="profileSidebarOverlay" onclick="toggleProfileSidebar()"></div>
+
+    <div class="profile-layout">
+        <!-- Sidebar -->
+        <div class="profile-sidebar" id="profileSidebar">
+            <!-- User card -->
+            <div class="profile-sidebar-user">
+                <div class="profile-sidebar-avatar" id="profileAvatar">U</div>
+                <div class="profile-sidebar-name" id="profileName">Member</div>
+                <div class="profile-sidebar-email" id="profileEmail"></div>
+                <div class="profile-sidebar-badges" id="profileBadgesRow"></div>
+                <div style="margin-top:12px;font-size:0.72rem;color:rgba(255,255,255,0.65)" id="profileJoinedText"></div>
+            </div>
+
+            <!-- Stats -->
+            <div style="padding:14px 16px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;border-bottom:1px solid var(--border)">
+                <div style="text-align:center;background:var(--surface2);border-radius:10px;padding:10px 4px">
+                    <div style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800" id="pStatReviews">0</div>
+                    <div style="font-size:0.65rem;color:var(--text3)">Reviews</div>
+                </div>
+                <div style="text-align:center;background:var(--surface2);border-radius:10px;padding:10px 4px">
+                    <div style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800" id="pStatRequests">0</div>
+                    <div style="font-size:0.65rem;color:var(--text3)">Requests</div>
+                </div>
+                <div style="text-align:center;background:var(--surface2);border-radius:10px;padding:10px 4px">
+                    <div style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800" id="pStatBadges">0</div>
+                    <div style="font-size:0.65rem;color:var(--text3)">Badges</div>
+                </div>
+            </div>
+
+            <!-- Nav -->
+            <nav class="profile-nav">
+                <button class="profile-nav-item active" onclick="switchProfileTab('overview');toggleProfileSidebar()" id="pnav-overview">
+                    <i class="fas fa-home"></i> Overview
                 </button>
-            </div>
-            <div id="profileRequestsList">
-                <div class="profile-empty"><i class="fas fa-paper-plane"></i>No requests yet</div>
-            </div>
+                <button class="profile-nav-item" onclick="switchProfileTab('reviews');toggleProfileSidebar()" id="pnav-reviews">
+                    <i class="fas fa-star"></i> My Reviews
+                </button>
+                <button class="profile-nav-item" onclick="switchProfileTab('requests');toggleProfileSidebar()" id="pnav-requests">
+                    <i class="fas fa-paper-plane"></i> My Requests
+                </button>
+                <button class="profile-nav-item" onclick="switchProfileTab('comments');toggleProfileSidebar()" id="pnav-comments">
+                    <i class="fas fa-comments"></i> My Comments
+                </button>
+                <button class="profile-nav-item" onclick="switchProfileTab('notifications');toggleProfileSidebar()" id="pnav-notifications">
+                    <i class="fas fa-bell"></i> Notifications
+                    <span class="profile-nav-badge" id="profileNotifBadge" style="display:none">0</span>
+                </button>
+                <button class="profile-nav-item" onclick="switchProfileTab('activity');toggleProfileSidebar()" id="pnav-activity">
+                    <i class="fas fa-history"></i> Activity Log
+                </button>
+                <button class="profile-nav-item" onclick="switchProfileTab('settings');toggleProfileSidebar()" id="pnav-settings" style="color:#c9b458 !important">
+                    <i class="fas fa-cog" style="color:#c9b458"></i> Settings
+                </button>
+                <div class="profile-nav-sep"></div>
+                <button class="profile-nav-item" onclick="closeProfile();setTimeout(()=>document.getElementById('services').scrollIntoView({behavior:'smooth'}),350)">
+                    <i class="fas fa-cogs"></i> Browse Services
+                </button>
+                <button class="profile-nav-item" onclick="shareProfileSite();toggleProfileSidebar()">
+                    <i class="fas fa-share-alt"></i> Share Site
+                </button>
+                <button class="profile-nav-item" onclick="contactSupport();toggleProfileSidebar()">
+                    <i class="fas fa-headset"></i> Contact Admin
+                </button>
+                <div class="profile-nav-sep"></div>
+                <button class="profile-nav-item profile-nav-logout" onclick="doLogout()">
+                    <i class="fas fa-sign-out-alt"></i> Sign Out
+                </button>
+            </nav>
         </div>
 
-        <!-- Comments Tab -->
-        <div class="profile-panel" id="profilePanel-comments">
-            <div class="req-form">
-                <h4><i class="fas fa-comment-dots" style="color:var(--electric)"></i> Leave a Comment or Complaint</h4>
-                <div class="complaint-type-row">
-                    <button class="ctype-btn active" data-ctype="comment" onclick="selectCType(this)">💬 Comment</button>
-                    <button class="ctype-btn" data-ctype="complaint" onclick="selectCType(this)">🚨 Complaint</button>
-                    <button class="ctype-btn" data-ctype="suggestion" onclick="selectCType(this)">💡 Suggestion</button>
-                    <button class="ctype-btn" data-ctype="feedback" onclick="selectCType(this)">👍 Feedback</button>
+        <!-- Main content -->
+        <div class="profile-main">
+            <div class="profile-content">
+
+                <!-- Overview Panel -->
+                <div class="profile-panel active" id="profilePanel-overview">
+                    <div class="profile-section-title"><i class="fas fa-home" style="color:var(--electric)"></i> Overview</div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px">
+                        <div class="profile-card" style="cursor:pointer" onclick="switchProfileTab('reviews')">
+                            <div style="font-size:1.4rem;margin-bottom:6px">⭐</div>
+                            <div style="font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800" id="overviewReviews">0</div>
+                            <div style="font-size:0.78rem;color:var(--text3)">Reviews Left</div>
+                        </div>
+                        <div class="profile-card" style="cursor:pointer" onclick="switchProfileTab('requests')">
+                            <div style="font-size:1.4rem;margin-bottom:6px">📋</div>
+                            <div style="font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800" id="overviewRequests">0</div>
+                            <div style="font-size:0.78rem;color:var(--text3)">Service Requests</div>
+                        </div>
+                    </div>
+                    <!-- Request Service CTA -->
+                    <button onclick="closeProfile();setTimeout(()=>document.getElementById('services').scrollIntoView({behavior:'smooth'}),350)" style="
+                        width:100%;padding:14px;border-radius:14px;border:none;
+                        background:linear-gradient(135deg,#2563eb,#06b6d4);
+                        color:white;font-family:'Syne',sans-serif;font-weight:700;font-size:0.92rem;
+                        cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
+                        margin-bottom:20px;box-shadow:0 4px 16px rgba(37,99,235,0.3)">
+                        <i class="fas fa-cogs"></i> Browse & Request a Service
+                    </button>
+                    <div id="overviewRecentList">
+                        <div class="profile-empty"><i class="fas fa-star"></i>Your activity will appear here</div>
+                    </div>
                 </div>
-                <textarea class="feedback-textarea" id="commentMsg" placeholder="Write your message here…" style="min-height:80px;margin-bottom:10px"></textarea>
-                <div class="auth-msg" id="commentMsgStatus"></div>
-                <button class="auth-submit" onclick="submitComment()">
-                    <i class="fas fa-paper-plane"></i> Submit
-                </button>
-            </div>
-            <div id="profileCommentsList">
-                <div class="profile-empty"><i class="fas fa-comments"></i>No messages yet</div>
+
+                <!-- Reviews Panel -->
+                <div class="profile-panel" id="profilePanel-reviews">
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+                        <button onclick="switchProfileTab('overview')" style="background:rgba(255,255,255,0.08);border:none;color:#a1a1b5;width:32px;height:32px;border-radius:9px;cursor:pointer;font-size:0.9rem"><i class="fas fa-arrow-left"></i></button>
+                        <div class="profile-section-title" style="margin:0"><i class="fas fa-star" style="color:#f59e0b"></i> My Reviews</div>
+                    </div>
+                    <div id="profileReviewsList">
+                        <div class="profile-empty"><i class="fas fa-star"></i>No reviews yet</div>
+                    </div>
+                </div>
+
+                <!-- Requests Panel -->
+                <div class="profile-panel" id="profilePanel-requests">
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+                        <button onclick="switchProfileTab('overview')" style="background:rgba(255,255,255,0.08);border:none;color:#a1a1b5;width:32px;height:32px;border-radius:9px;cursor:pointer;font-size:0.9rem"><i class="fas fa-arrow-left"></i></button>
+                        <div class="profile-section-title" style="margin:0"><i class="fas fa-paper-plane" style="color:var(--electric)"></i> Service Requests</div>
+                    </div>
+                    <div class="req-form">
+                        <h4><i class="fas fa-plus-circle" style="color:var(--electric)"></i> Submit a New Request</h4>
+                        <div class="auth-field">
+                            <label>Request Title</label>
+                            <input type="text" id="reqTitle" placeholder="e.g. I need a website for my business">
+                        </div>
+                        <div class="auth-field">
+                            <label>Service Needed</label>
+                            <select class="feedback-service-select" id="reqService" style="margin-bottom:0">
+                                <option value="">Select service…</option>
+                                <option>Web Development</option><option>Mobile App</option>
+                                <option>E-commerce</option><option>SEO & Marketing</option>
+                                <option>UI/UX Design</option><option>Cloud / SaaS</option><option>Other</option>
+                            </select>
+                        </div>
+                        <div class="auth-field" style="margin-top:10px">
+                            <label>Description</label>
+                            <textarea class="feedback-textarea" id="reqDesc" placeholder="Describe what you need…" style="margin-bottom:0;min-height:80px"></textarea>
+                        </div>
+                        <div class="auth-msg" id="reqMsg" style="margin-top:10px"></div>
+                        <button class="auth-submit" style="margin-top:10px" onclick="submitRequest()">
+                            <i class="fas fa-paper-plane"></i> Submit Request
+                        </button>
+                    </div>
+                    <div id="profileRequestsList">
+                        <div class="profile-empty"><i class="fas fa-paper-plane"></i>No requests yet</div>
+                    </div>
+                </div>
+
+                <!-- Comments Panel -->
+                <div class="profile-panel" id="profilePanel-comments">
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+                        <button onclick="switchProfileTab('overview')" style="background:rgba(255,255,255,0.08);border:none;color:#a1a1b5;width:32px;height:32px;border-radius:9px;cursor:pointer;font-size:0.9rem"><i class="fas fa-arrow-left"></i></button>
+                        <div class="profile-section-title" style="margin:0"><i class="fas fa-comments" style="color:var(--electric)"></i> My Comments</div>
+                    </div>
+                    <div class="req-form">
+                        <h4><i class="fas fa-comment-dots" style="color:var(--electric)"></i> Leave a Comment or Complaint</h4>
+                        <div class="complaint-type-row">
+                            <button class="ctype-btn active" data-ctype="comment" onclick="selectCType(this)">💬 Comment</button>
+                            <button class="ctype-btn" data-ctype="complaint" onclick="selectCType(this)">🚨 Complaint</button>
+                            <button class="ctype-btn" data-ctype="suggestion" onclick="selectCType(this)">💡 Suggestion</button>
+                            <button class="ctype-btn" data-ctype="feedback" onclick="selectCType(this)">👍 Feedback</button>
+                        </div>
+                        <textarea class="feedback-textarea" id="commentMsg" placeholder="Write your message…" style="min-height:80px;margin-bottom:10px"></textarea>
+                        <div class="auth-msg" id="commentMsgStatus"></div>
+                        <button class="auth-submit" onclick="submitComment()">
+                            <i class="fas fa-paper-plane"></i> Submit
+                        </button>
+                    </div>
+                    <div id="profileCommentsList">
+                        <div class="profile-empty"><i class="fas fa-comments"></i>No messages yet</div>
+                    </div>
+                </div>
+
+                <!-- Notifications Panel -->
+                <div class="profile-panel" id="profilePanel-notifications">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+                        <div style="display:flex;align-items:center;gap:10px">
+                            <button onclick="switchProfileTab('overview')" style="background:rgba(255,255,255,0.08);border:none;color:#a1a1b5;width:32px;height:32px;border-radius:9px;cursor:pointer;font-size:0.9rem"><i class="fas fa-arrow-left"></i></button>
+                            <div class="profile-section-title" style="margin:0"><i class="fas fa-bell" style="color:var(--electric)"></i> Notifications</div>
+                        </div>
+                        <button onclick="markAllNotifsRead()" style="background:none;border:1px solid var(--border);color:var(--text2);font-size:0.75rem;padding:5px 12px;border-radius:8px;cursor:pointer">Mark all read</button>
+                    </div>
+                    <div id="profileNotifList">
+                        <div class="profile-empty"><i class="fas fa-bell-slash"></i>No notifications yet</div>
+                    </div>
+                </div>
+
+                <!-- Activity Panel -->
+                <div class="profile-panel" id="profilePanel-activity">
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+                        <button onclick="switchProfileTab('overview')" style="background:rgba(255,255,255,0.08);border:none;color:#a1a1b5;width:32px;height:32px;border-radius:9px;cursor:pointer;font-size:0.9rem"><i class="fas fa-arrow-left"></i></button>
+                        <div class="profile-section-title" style="margin:0"><i class="fas fa-history" style="color:var(--electric)"></i> Activity Log</div>
+                    </div>
+                    <div id="lastSeenInfo" style="margin-bottom:14px"></div>
+                    <div id="profileActivityList">
+                        <div class="profile-empty"><i class="fas fa-clock"></i>No activity recorded yet</div>
+                    </div>
+                </div>
+
+                <!-- Settings Panel -->
+                <div class="profile-panel" id="profilePanel-settings">
+                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+                        <button onclick="switchProfileTab('overview')" style="background:rgba(255,255,255,0.08);border:none;color:#a1a1b5;width:32px;height:32px;border-radius:9px;cursor:pointer;font-size:0.9rem"><i class="fas fa-arrow-left"></i></button>
+                        <div class="profile-section-title" style="margin:0"><i class="fas fa-cog" style="color:var(--electric)"></i> Settings</div>
+                    </div>
+
+                    <!-- Change Display Name -->
+                    <div class="profile-card">
+                        <h4 style="font-size:0.88rem;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px">
+                            <i class="fas fa-user-edit" style="color:var(--electric)"></i> Change Display Name
+                        </h4>
+                        <div class="svc-field">
+                            <label>New Name</label>
+                            <input type="text" id="settingsNewName" placeholder="Your full name">
+                        </div>
+                        <button class="auth-submit" style="margin-top:4px" onclick="updateDisplayName()">
+                            <i class="fas fa-save"></i> Save Name
+                        </button>
+                        <div class="auth-msg" id="settingsNameMsg" style="margin-top:8px"></div>
+                    </div>
+
+                    <!-- Change Email -->
+                    <div class="profile-card" style="margin-top:14px">
+                        <h4 style="font-size:0.88rem;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px">
+                            <i class="fas fa-envelope" style="color:var(--neon)"></i> Change Email Address
+                        </h4>
+                        <p style="font-size:0.78rem;color:var(--text3);margin-bottom:12px">A confirmation link will be sent to your new email address.</p>
+                        <div class="svc-field">
+                            <label>New Email Address</label>
+                            <input type="email" id="settingsNewEmail" placeholder="new@email.com">
+                        </div>
+                        <button class="auth-submit" style="margin-top:4px" onclick="updateEmail()">
+                            <i class="fas fa-envelope"></i> Update Email
+                        </button>
+                        <div class="auth-msg" id="settingsEmailMsg" style="margin-top:8px"></div>
+                    </div>
+
+                    <!-- Change Password -->
+                    <div class="profile-card" style="margin-top:14px">
+                        <h4 style="font-size:0.88rem;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px">
+                            <i class="fas fa-lock" style="color:#f59e0b"></i> Change Password
+                        </h4>
+                        <div class="svc-field">
+                            <label>New Password</label>
+                            <input type="password" id="settingsNewPass" placeholder="Minimum 6 characters">
+                        </div>
+                        <div class="svc-field">
+                            <label>Confirm New Password</label>
+                            <input type="password" id="settingsConfirmPass" placeholder="Repeat new password">
+                        </div>
+                        <button class="auth-submit" style="margin-top:4px" onclick="updatePassword()">
+                            <i class="fas fa-key"></i> Update Password
+                        </button>
+                        <div class="auth-msg" id="settingsPassMsg" style="margin-top:8px"></div>
+                    </div>
+
+                    <!-- Appearance -->
+                    <div class="profile-card" style="margin-top:14px">
+                        <h4 style="font-size:0.88rem;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px">
+                            <i class="fas fa-palette" style="color:var(--electric)"></i> Appearance
+                        </h4>
+                        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0">
+                            <span style="font-size:0.85rem">Dark Mode</span>
+                            <button class="pf-toggle on" id="settingsDarkToggle" onclick="this.classList.toggle('on');toggleThemeFromSettings(this)"></button>
+                        </div>
+                    </div>
+
+                    <!-- Quick Links -->
+                    <div class="profile-card" style="margin-top:14px">
+                        <h4 style="font-size:0.88rem;font-weight:700;margin-bottom:14px;color:var(--text2)">Quick Links</h4>
+                        <button onclick="shareProfileSite()" style="width:100%;padding:11px;border-radius:10px;border:1.5px solid var(--border);background:none;color:var(--text);font-family:'Syne',sans-serif;font-size:0.84rem;font-weight:600;cursor:pointer;text-align:left;display:flex;align-items:center;gap:8px;margin-bottom:8px">
+                            <i class="fas fa-share-alt" style="color:var(--neon)"></i> Share This Site
+                        </button>
+                        <button onclick="contactSupport()" style="width:100%;padding:11px;border-radius:10px;border:1.5px solid var(--border);background:none;color:var(--text);font-family:'Syne',sans-serif;font-size:0.84rem;font-weight:600;cursor:pointer;text-align:left;display:flex;align-items:center;gap:8px;margin-bottom:8px">
+                            <i class="fas fa-headset" style="color:var(--green)"></i> Contact Admin
+                        </button>
+                        <button onclick="confirmDeleteAccount()" style="width:100%;padding:11px;border-radius:10px;border:1.5px solid rgba(244,63,94,0.3);background:none;color:var(--rose);font-family:'Syne',sans-serif;font-size:0.84rem;font-weight:600;cursor:pointer;text-align:left;display:flex;align-items:center;gap:8px">
+                            <i class="fas fa-user-slash"></i> Delete Account
+                        </button>
+                    </div>
+
+                    <div style="margin-top:16px">
+                        <button onclick="doLogout()" style="width:100%;padding:13px;border-radius:12px;border:none;background:rgba(244,63,94,0.1);color:#f87171;font-family:'Syne',sans-serif;font-size:0.9rem;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
+                            <i class="fas fa-sign-out-alt"></i> Sign Out
+                        </button>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
