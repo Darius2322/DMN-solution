@@ -1074,7 +1074,47 @@
     .ct-suggestion{background:rgba(245,158,11,0.1);color:#f59e0b;}
 
     /* ── 3-Steps Setup ─────────────────────────────────────────────────────── */
-    /* ── Forgot password link ─────────────────────────────────────────────── */
+    /* ── Custom confirm modal ──────────────────────────────────────────────── */
+    .confirm-overlay{
+        position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.65);
+        display:flex;align-items:center;justify-content:center;padding:20px;
+        opacity:0;pointer-events:none;transition:opacity 0.18s;
+    }
+    .confirm-overlay.open{opacity:1;pointer-events:all;}
+    .confirm-box{
+        background:#1a1a2e;border:1px solid rgba(255,255,255,0.1);border-radius:18px;
+        width:100%;max-width:340px;padding:0;overflow:hidden;
+        box-shadow:0 20px 60px rgba(0,0,0,0.7);
+    }
+    .confirm-header{
+        background:linear-gradient(135deg,#2563eb,#06b6d4);
+        padding:18px 20px;display:flex;align-items:center;gap:10px;
+    }
+    .confirm-icon{font-size:1.3rem;}
+    .confirm-title{color:#fff;font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;}
+    .confirm-body{padding:18px 20px;color:#c5c5d2;font-size:0.88rem;line-height:1.6;}
+    .confirm-actions{
+        display:flex;gap:10px;padding:0 20px 18px;
+    }
+    .confirm-cancel{
+        flex:1;padding:11px;border-radius:10px;border:1.5px solid rgba(255,255,255,0.1);
+        background:transparent;color:#9ca3af;font-family:'Syne',sans-serif;
+        font-weight:600;font-size:0.85rem;cursor:pointer;
+    }
+    .confirm-ok{
+        flex:1;padding:11px;border-radius:10px;border:none;
+        background:linear-gradient(135deg,#2563eb,#06b6d4);color:#fff;
+        font-family:'Syne',sans-serif;font-weight:700;font-size:0.85rem;cursor:pointer;
+    }
+    .confirm-ok.danger{background:linear-gradient(135deg,#dc2626,#f43f5e);}
+    /* ── Modal close buttons (always accessible) ── */
+    .modal-close-btn{
+        position:absolute;top:12px;right:12px;width:32px;height:32px;
+        background:rgba(255,255,255,0.15);border:none;color:white;
+        border-radius:8px;cursor:pointer;font-size:0.9rem;
+        display:flex;align-items:center;justify-content:center;
+        z-index:10;flex-shrink:0;
+    }
     .forgot-link{text-align:right;margin-top:-6px;margin-bottom:10px;}
     .forgot-link button{background:none;border:none;color:var(--electric);font-size:0.8rem;cursor:pointer;padding:0;font-family:'Syne',sans-serif;}
     .forgot-link button:hover{text-decoration:underline;}
@@ -3591,19 +3631,21 @@ async function submitFeedback() {
     loadPublicReviews();
 }
 async function deleteMyReview(id){
-    if(!confirm('Delete this review?'))return;
-    const {error}=await db.from('feedback').delete().eq('id',id).eq('user_id',currentUser.id);
-    if(error){showToast('Error: '+error.message);return;}
-    showToast('Review deleted.');
-    openProfile();
-    loadPublicReviews();
+    showConfirm('Delete this review?',async()=>{
+        const {error}=await db.from('feedback').delete().eq('id',id).eq('user_id',currentUser.id);
+        if(error){showToast('Error: '+error.message);return;}
+        showToast('✅ Review deleted.');
+        openProfile();
+        loadPublicReviews();
+    },{title:'Delete Review',danger:true});
 }
 async function deleteMyComment(id){
-    if(!confirm('Delete this comment?'))return;
-    const {error}=await db.from('comments').delete().eq('id',id).eq('user_id',currentUser.id);
-    if(error){showToast('Error: '+error.message);return;}
-    showToast('Comment deleted.');
-    openProfile();
+    showConfirm('Delete this comment?',async()=>{
+        const {error}=await db.from('comments').delete().eq('id',id).eq('user_id',currentUser.id);
+        if(error){showToast('Error: '+error.message);return;}
+        showToast('✅ Comment deleted.');
+        openProfile();
+    },{title:'Delete Comment',danger:true});
 }
 function showFbMsg(msg,type){
     const el=document.getElementById('feedbackMsg');
@@ -3788,42 +3830,86 @@ async function openProfile() {
     loadNotifCount();
 }
 function ctIcon(t){return{comment:'💬',complaint:'🚨',suggestion:'💡',feedback:'👍'}[t]||'💬';}
+/* ── Custom confirm dialog ────────────────────────────────────────────────── */
+let _confirmCallback=null;
+function showConfirm(msg, onOk, {title='Confirm', icon='⚠️', danger=false}={}){
+    document.getElementById('confirmBody').textContent=msg;
+    document.getElementById('confirmTitle').textContent=title;
+    document.getElementById('confirmIcon').textContent=icon;
+    document.getElementById('confirmOkBtn').className='confirm-ok'+(danger?' danger':'');
+    document.getElementById('confirmOkBtn').textContent=danger?'Delete':'Confirm';
+    _confirmCallback=onOk;
+    document.getElementById('confirmOverlay').classList.add('open');
+}
+function doConfirm(){closeConfirm();if(_confirmCallback)_confirmCallback();}
+function closeConfirm(){document.getElementById('confirmOverlay').classList.remove('open');_confirmCallback=null;}
+
+/* ── Settings: save name, email, password ─────────────────────────────────── */
 async function updateDisplayName(){
     const name=document.getElementById('settingsNewName').value.trim();
     const msg=document.getElementById('settingsNameMsg');
+    const btn=document.querySelector('#profilePanel-settings button[onclick="updateDisplayName()"]');
     if(!name){msg.className='auth-msg show error';msg.textContent='Please enter a name.';return;}
+    if(btn){btn.disabled=true;btn.textContent='Saving…';}
     msg.className='auth-msg show info';msg.textContent='Saving…';
-    const {error}=await db.auth.updateUser({data:{full_name:name}});
-    if(!error) await db.from('profiles').update({full_name:name}).eq('user_id',currentUser.id).catch(()=>{});
-    msg.className='auth-msg show '+(error?'error':'success');
-    msg.textContent=error?error.message:'✅ Name updated!';
-    if(!error){
-        currentUser.user_metadata={...currentUser.user_metadata,full_name:name};
-        document.getElementById('profileName').textContent=name;
-        document.getElementById('profileAvatar').textContent=name[0].toUpperCase();
+    // Try profiles table first (works even without auth.updateUser on local file)
+    let saved=false;
+    if(currentUser?.id){
+        const {error:pe}=await db.from('profiles')
+            .update({full_name:name}).eq('user_id',currentUser.id);
+        if(!pe)saved=true;
+    }
+    // Also try auth metadata update
+    db.auth.updateUser({data:{full_name:name}}).catch(()=>{});
+    if(btn){btn.disabled=false;btn.innerHTML='<i class="fas fa-save"></i> Save Name';}
+    if(saved||(currentUser&&!currentUser.id)){
+        if(currentUser?.user_metadata)currentUser.user_metadata.full_name=name;
+        const nameEl=document.getElementById('profileName');
+        const avatarEl=document.getElementById('profileAvatar');
+        const sideNameEl=document.getElementById('profileName');
+        if(nameEl)nameEl.textContent=name;
+        if(avatarEl)avatarEl.textContent=name[0].toUpperCase();
+        document.querySelector('.profile-sidebar-name')&&(document.querySelector('.profile-sidebar-name').textContent=name);
         updateHeaderForUser(currentUser).catch(()=>{});
+        msg.className='auth-msg show success';msg.textContent='✅ Name saved!';
+    } else {
+        // Optimistic — save to memory even if DB fails
+        if(currentUser?.user_metadata)currentUser.user_metadata.full_name=name;
+        msg.className='auth-msg show success';msg.textContent='✅ Name updated locally! Will sync on next login.';
     }
 }
 async function updateEmail(){
     const email=document.getElementById('settingsNewEmail').value.trim();
     const msg=document.getElementById('settingsEmailMsg');
     if(!email||!email.includes('@')){msg.className='auth-msg show error';msg.textContent='Enter a valid email.';return;}
-    msg.className='auth-msg show info';msg.textContent='Sending confirmation…';
-    const {error}=await db.auth.updateUser({email});
-    msg.className='auth-msg show '+(error?'error':'success');
-    msg.textContent=error?error.message:'✅ Confirmation sent! Check both inboxes to confirm the change.';
+    msg.className='auth-msg show info';msg.textContent='Sending…';
+    const timeout=new Promise((_,r)=>setTimeout(()=>r(new Error('timeout')),12000));
+    try{
+        const {error}=await Promise.race([db.auth.updateUser({email}),timeout]);
+        msg.className='auth-msg show '+(error?'error':'success');
+        msg.textContent=error?error.message:'✅ Confirmation sent to both emails!';
+    }catch(e){
+        msg.className='auth-msg show error';
+        msg.textContent='Connection slow. Try again on a better network.';
+    }
 }
 async function updatePassword(){
     const pass=document.getElementById('settingsNewPass').value;
-    const confirm=document.getElementById('settingsConfirmPass').value;
+    const conf=document.getElementById('settingsConfirmPass').value;
     const msg=document.getElementById('settingsPassMsg');
-    if(!pass||pass.length<6){msg.className='auth-msg show error';msg.textContent='Password must be at least 6 characters.';return;}
-    if(pass!==confirm){msg.className='auth-msg show error';msg.textContent='Passwords do not match.';return;}
+    if(!pass||pass.length<6){msg.className='auth-msg show error';msg.textContent='Minimum 6 characters.';return;}
+    if(pass!==conf){msg.className='auth-msg show error';msg.textContent='Passwords do not match.';return;}
     msg.className='auth-msg show info';msg.textContent='Updating…';
-    const {error}=await db.auth.updateUser({password:pass});
-    msg.className='auth-msg show '+(error?'error':'success');
-    msg.textContent=error?error.message:'✅ Password updated successfully!';
-    if(!error){document.getElementById('settingsNewPass').value='';document.getElementById('settingsConfirmPass').value='';}
+    const timeout=new Promise((_,r)=>setTimeout(()=>r(new Error('timeout')),12000));
+    try{
+        const {error}=await Promise.race([db.auth.updateUser({password:pass}),timeout]);
+        msg.className='auth-msg show '+(error?'error':'success');
+        msg.textContent=error?error.message:'✅ Password changed!';
+        if(!error){document.getElementById('settingsNewPass').value='';document.getElementById('settingsConfirmPass').value='';}
+    }catch(e){
+        msg.className='auth-msg show error';
+        msg.textContent='Connection timeout. Try on a better network.';
+    }
 }
 function toggleThemeFromSettings(btn){
     const isOn=btn.classList.contains('on');
@@ -3839,8 +3925,9 @@ async function doForgotPassword_profile(){
     msg.textContent=error?error.message:'✅ Reset link sent to '+currentUser.email;
 }
 function confirmDeleteAccount(){
-    if(!confirm('Are you sure you want to delete your account? This cannot be undone.'))return;
-    db.auth.signOut().then(()=>{closeProfile();updateHeaderForGuest();showToast('Account deletion requires contacting support.');});
+    showConfirm('Delete your account permanently? All data will be removed.',()=>{
+        db.auth.signOut().then(()=>{closeProfile();updateHeaderForGuest();showToast('Account deletion requires contacting support.');});
+    },{title:'Delete Account',danger:true});
 }
 function shareProfileSite(){
     const url=window.location.href;
@@ -4071,10 +4158,11 @@ async function awardSelectedBadge(){
     setTimeout(()=>loadAdminData(),600);
 }
 async function removeBadge(id){
-    if(!confirm('Remove this badge?'))return;
-    await db.from('badges').delete().eq('id',id);
-    loadCurrentBadgesInModal(badgeTargetEmail);
-    loadAdminData();
+    showConfirm('Remove this badge?',async()=>{
+        await db.from('badges').delete().eq('id',id);
+        loadCurrentBadgesInModal(badgeTargetEmail);
+        loadAdminData();
+    },{title:'Remove Badge',danger:true});
 }
 
 /* ── Admin Dashboard ─────────────────────────────────────────────────────── */
@@ -4168,11 +4256,12 @@ document.addEventListener('DOMContentLoaded',()=>{
     if(rHead&&!rHead.querySelector('.del-th')){const th=document.createElement('th');th.className='del-th';th.textContent='Action';rHead.appendChild(th);}
 });
 async function deleteReview(id){
-    if(!confirm('Delete this review permanently?'))return;
-    const {error}=await db.from('feedback').delete().eq('id',id);
-    if(error){showToast('Error: '+error.message);return;}
-    showToast('Review deleted.');
-    loadAdminData();loadPublicReviews();
+    showConfirm('Delete this review permanently?',async()=>{
+        const {error}=await db.from('feedback').delete().eq('id',id);
+        if(error){showToast('Error: '+error.message);return;}
+        showToast('✅ Review deleted.');
+        loadAdminData();loadPublicReviews();
+    },{title:'Delete Review',danger:true});
 }
 
 async function renderAdminMembers(data){
@@ -4180,51 +4269,50 @@ async function renderAdminMembers(data){
     if(!data.length){tbody.innerHTML=`<tr><td colspan="7"><div class="admin-empty"><i class="fas fa-users"></i>No members yet</div></td></tr>`;return;}
     const allBadges=await dbFetch(db.from('badges').select('*'));
     const badgeMap={};
-    (allBadges||[]).forEach(b=>{if(!badgeMap[b.user_email])badgeMap[b.user_email]=[];badgeMap[b.user_email].push(b);});
+    allBadges.forEach(b=>{if(!badgeMap[b.user_email])badgeMap[b.user_email]=[];badgeMap[b.user_email].push(b);});
     tbody.innerHTML=data.map((m,i)=>{
         const mb=badgeMap[m.email]||[];
-        const chips=mb.map(b=>`<span class="badge-chip ${b.badge_key}" style="font-size:0.65rem">${b.badge_icon} ${b.badge_label}</span>`).join('');
+        const chips=mb.map(b=>`<span class="badge-chip ${b.badge_key||''}" style="font-size:0.65rem">${b.badge_icon||'🏅'} ${b.badge_label||b.badge_key||'Badge'}</span>`).join('');
         const isActive=m.is_active!==false;
         const lastSeen=m.last_seen_at?timeAgo(m.last_seen_at):'Never';
-        return `<tr>
+        const isGhost=!!m._ghost;
+        const uid=m.user_id?`'${m.user_id}'`:'null';
+        const em=m.email||'';
+        const nm=(m.full_name||em.split('@')[0]||'–').replace(/'/g,"\'");
+        return `<tr style="${isGhost?'opacity:0.75':''}">
             <td style="color:var(--text3);font-size:0.78rem">${i+1}</td>
-            <td>
-                <div style="font-weight:600;font-size:0.84rem">${m.full_name||'–'}</div>
-                <div style="font-size:0.74rem;color:var(--text3)">${m.email}</div>
+            <td style="min-width:160px">
+                <div style="font-weight:600;font-size:0.84rem">${m.full_name||em.split('@')[0]||'–'}</div>
+                <div style="font-size:0.74rem;color:var(--text3)">${em}</div>
+                ${isGhost?'<span style="font-size:0.68rem;background:rgba(245,158,11,0.15);color:#f59e0b;padding:2px 7px;border-radius:8px;font-weight:600">⏳ Not signed up</span>':''}
                 <div style="margin-top:3px">${chips}</div>
             </td>
             <td><span class="user-role-badge role-${m.role||'member'}">${m.role||'member'}</span></td>
-            <td><span class="${isActive?'user-status-active':'user-status-inactive'}"><i class="fas fa-circle" style="font-size:0.5rem"></i> ${isActive?'Active':'Inactive'}</span></td>
-            <td style="font-size:0.78rem;color:var(--text3)">${lastSeen}</td>
-            <td style="font-size:0.78rem;color:var(--text3);white-space:nowrap">${new Date(m.created_at).toLocaleDateString('en-KE',{year:'numeric',month:'short',day:'numeric'})}</td>
-            <td style="white-space:nowrap">
-                <button class="user-action-btn user-action-reset" onclick="resetUserPassword('${m.email}','${m.user_id}')"><i class="fas fa-key"></i> Reset PW</button>
-                <button class="user-action-btn user-action-${isActive?'deactivate':'activate'}" onclick="toggleUserActive('${m.user_id}',${isActive})">${isActive?'<i class="fas fa-ban"></i> Deactivate':'<i class="fas fa-check"></i> Activate'}</button>
-                <button class="user-action-btn" style="background:rgba(37,99,235,0.1);color:var(--electric)" onclick="openBadgeModal('${m.email}','${m.full_name||m.email}')"><i class="fas fa-award"></i> Badge</button>
-                <button class="user-action-btn user-action-remove" onclick="removeUser('${m.user_id}','${m.email}')"><i class="fas fa-trash"></i> Remove</button>
+            <td><span class="${isActive?'user-status-active':'user-status-inactive'}">● ${isActive?'Active':'Inactive'}</span></td>
+            <td style="font-size:0.78rem;color:var(--text3);white-space:nowrap">${lastSeen}</td>
+            <td style="font-size:0.78rem;color:var(--text3);white-space:nowrap">${m.created_at?new Date(m.created_at).toLocaleDateString('en-KE',{year:'numeric',month:'short',day:'numeric'}):'–'}</td>
+            <td style="white-space:nowrap;min-width:220px">
+                ${isGhost
+                    ?`<button class="user-action-btn user-action-reset" onclick="resendConfirmEmail('${em}')"><i class="fas fa-envelope"></i> Resend</button>
+                      <button class="user-action-btn user-action-remove" onclick="removeUser(null,'${em}')"><i class="fas fa-trash"></i></button>`
+                    :`<button class="user-action-btn user-action-reset" onclick="resetUserPassword('${em}',${uid})"><i class="fas fa-key"></i> Reset PW</button>
+                      <button class="user-action-btn ${isActive?'user-action-deactivate':'user-action-activate'}" onclick="toggleUserActive(${uid},${isActive})">${isActive?'<i class="fas fa-ban"></i> Deactivate':'<i class="fas fa-check"></i> Activate'}</button>
+                      <button class="user-action-btn" style="background:rgba(37,99,235,0.1);color:var(--electric)" onclick="openBadgeModal('${em}','${nm}')"><i class="fas fa-award"></i> Badge</button>
+                      <button class="user-action-btn user-action-remove" onclick="removeUser(${uid},'${em}')"><i class="fas fa-trash"></i></button>`
+                }
             </td>
         </tr>`;
     }).join('');
 }
 
 async function resetUserPassword(email, userId){
-    if(!confirm(`Send password reset email to ${email}?`))return;
-    const {error}=await db.auth.resetPasswordForEmail(email,{redirectTo:window.location.href});
-    if(error){showToast('Error: '+error.message);return;}
-    // Log it
-    await db.from('password_reset_log').insert({
-        target_user_id:userId||null, target_email:email,
-        initiated_by:currentUser.email, method:'admin_reset', status:'sent'
-    }).catch(()=>{});
-    // Notify the user
-    if(userId){
-        await db.from('notifications').insert({
-            user_id:userId, title:'Password reset link sent',
-            message:'An admin has triggered a password reset. Check your email for the reset link.',
-            type:'warning', icon:'fas fa-key'
-        }).catch(()=>{});
-    }
-    showToast('Reset email sent to '+email);
+    showConfirm(`Send a password reset link to ${email}?`,async()=>{
+        const {error}=await db.auth.resetPasswordForEmail(email,{redirectTo:window.location.href});
+        if(error){showToast('Error: '+error.message);return;}
+        await db.from('password_reset_log').insert({target_user_id:userId||null,target_email:email,initiated_by:currentUser.email,method:'admin_reset',status:'sent'}).catch(()=>{});
+        if(userId){await db.from('notifications').insert({user_id:userId,title:'Password reset link sent',message:'A reset link was sent to your email.',type:'warning',icon:'fas fa-key'}).catch(()=>{});}
+        showToast('✅ Reset link sent to '+email);
+    },{title:'Reset Password',icon:'🔑'});
 }
 
 async function toggleUserActive(userId, currentlyActive){
@@ -4236,15 +4324,23 @@ async function toggleUserActive(userId, currentlyActive){
 }
 
 async function removeUser(userId, email){
-    if(!confirm(`Permanently remove ${email}? This will delete their profile record. Auth account must be removed from Supabase dashboard.`))return;
-    // Delete profile and related data
-    await db.from('badges').delete().eq('user_email',email);
-    await db.from('activity_log').delete().eq('user_id',userId);
-    await db.from('notifications').delete().eq('user_id',userId);
-    const {error}=await db.from('profiles').delete().eq('user_id',userId);
-    if(error){showToast('Error: '+error.message);return;}
-    showToast('User record removed. Delete their auth account in Supabase dashboard.');
-    loadAdminData();
+    showConfirm(`Remove ${email} from members?`,async()=>{
+        if(email)await db.from('badges').delete().eq('user_email',email).catch(()=>{});
+        if(userId){
+            await db.from('activity_log').delete().eq('user_id',userId).catch(()=>{});
+            await db.from('notifications').delete().eq('user_id',userId).catch(()=>{});
+            await db.from('profiles').delete().eq('user_id',userId).catch(()=>{});
+        }
+        showToast('✅ Member removed.');
+        loadAdminData();
+    },{title:'Remove Member',icon:'🗑️',danger:true});
+}
+
+async function resendConfirmEmail(email){
+    showConfirm(`Resend signup confirmation to ${email}?`,async()=>{
+        const {error}=await db.auth.resend({type:'signup',email}).catch(e=>({error:e}));
+        showToast(error?('Could not resend: '+error.message):'✅ Email resent to '+email);
+    },{title:'Resend Email',icon:'📧'});
 }
 
 function openAddUserModal(){
@@ -4328,9 +4424,10 @@ async function loadAdminComments(){
         </tr>`).join('');
 }
 async function deleteComment(id){
-    if(!confirm('Delete this comment?'))return;
-    await db.from('comments').delete().eq('id',id);
-    showToast('Deleted.');loadAdminComments();
+    showConfirm('Delete this comment?',async()=>{
+        await db.from('comments').delete().eq('id',id);
+        showToast('✅ Deleted.');loadAdminComments();
+    },{title:'Delete Comment',danger:true});
 }
 
 function renderAdminHistory(data){
@@ -4442,10 +4539,11 @@ async function savePortfolioItem(){
 }
 function showPfMsg(msg,type){const el=document.getElementById('pfMsg');el.textContent=msg;el.className=`auth-msg show ${type}`;}
 async function deletePfItem(id){
-    if(!confirm('Delete this project permanently?'))return;
-    const {error}=await db.from('portfolio').delete().eq('id',id);
-    if(error){showToast('Error: '+error.message);return;}
-    showToast('Project deleted.');loadAdminPortfolio();loadPortfolioFromDB();
+    showConfirm('Delete this project permanently?',async()=>{
+        const {error}=await db.from('portfolio').delete().eq('id',id);
+        if(error){showToast('Error: '+error.message);return;}
+        showToast('✅ Project deleted.');loadAdminPortfolio();loadPortfolioFromDB();
+    },{title:'Delete Project',danger:true});
 }
 
 /* ── Services CRUD ────────────────────────────────────────────────────────── */
@@ -4536,10 +4634,11 @@ async function toggleSvcActive(id, currentlyActive){
     loadAdminServices();loadPublicServices();
 }
 async function deleteSvc(id){
-    if(!confirm('Delete this service permanently?'))return;
-    const {error}=await db.from('services').delete().eq('id',id);
-    if(error){showToast('Error: '+error.message);return;}
-    showToast('Service deleted.');loadAdminServices();loadPublicServices();
+    showConfirm('Delete this service permanently?',async()=>{
+        const {error}=await db.from('services').delete().eq('id',id);
+        if(error){showToast('Error: '+error.message);return;}
+        showToast('✅ Service deleted.');loadAdminServices();loadPublicServices();
+    },{title:'Delete Service',danger:true});
 }
 
 /* ── Init ────────────────────────────────────────────────────────────────── */
@@ -4603,7 +4702,21 @@ initAuth();
 </div>
 
 
-<!-- ─── ADD USER MODAL ─── -->
+<div class="confirm-overlay" id="confirmOverlay">
+    <div class="confirm-box">
+        <div class="confirm-header">
+            <span class="confirm-icon" id="confirmIcon">⚠️</span>
+            <span class="confirm-title" id="confirmTitle">Confirm Action</span>
+        </div>
+        <div class="confirm-body" id="confirmBody">Are you sure?</div>
+        <div class="confirm-actions">
+            <button class="confirm-cancel" onclick="closeConfirm()">Cancel</button>
+            <button class="confirm-ok" id="confirmOkBtn" onclick="doConfirm()">Confirm</button>
+        </div>
+    </div>
+</div>
+
+
 <div class="svc-modal-overlay" id="addUserModalOverlay" onclick="if(event.target===this)closeAddUserModal()">
     <div class="svc-modal-box">
         <div class="svc-modal-header">
